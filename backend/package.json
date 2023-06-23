@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "test": "jest --coverage",
+    "start": "tsnd --respawn --cls index.ts",
     "start-install": "npm i & tsnd --respawn --cls index.ts",
-    "start": "tsnd --respawn --cls index.ts"
+    "test": "jest --coverage",
+    "test-coverage": "jest"
   },
   "keywords": [],
   "author": "",
