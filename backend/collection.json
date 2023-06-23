@@ -1,0 +1,174 @@
+{
+	"info": {
+		"_postman_id": "f4fe2f6e-647a-4524-b645-5221736d105a",
+		"name": "Light-It Healthcare Challenge",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14510049"
+	},
+	"item": [
+		{
+			"name": "apimedic",
+			"item": [
+				{
+					"name": "GetSymptoms",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://sandbox-healthservice.priaid.ch/symptoms?token={{token}}&language=en-gb",
+							"protocol": "https",
+							"host": [
+								"sandbox-healthservice",
+								"priaid",
+								"ch"
+							],
+							"path": [
+								"symptoms"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "{{token}}"
+								},
+								{
+									"key": "language",
+									"value": "en-gb"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAPIToken",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "hyanezsa@gmail.com:w7YXj2k3J6RzEa5t9",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{apiMedicBaseURL}}/login",
+							"host": [
+								"{{apiMedicBaseURL}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "API",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Hernan\",\r\n    \"lastName\": \"Yanez\",\r\n    \"gender\": \"male\",\r\n    \"birthdate\": \"02/12/2000\",\r\n    \"email\" : \"hyanez@gmail.com\",\r\n    \"password\": \"Password123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiBaseURL}}/auth/register",
+							"host": [
+								"{{apiBaseURL}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Hernan\",\r\n    \"lastName\": \"Yanez\",\r\n    \"gender\": \"male\",\r\n    \"birthdate\": \"02/12/2000\",\r\n    \"email\" : \"hyanez@gmail.com\",\r\n    \"password\": \"Password123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiBaseURL}}/auth/register",
+							"host": [
+								"{{apiBaseURL}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer"
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Imh5YW5lenNhQGdtYWlsLmNvbSIsInJvbGUiOiJVc2VyIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvc2lkIjoiMTI1MjEiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3ZlcnNpb24iOiIyMDAiLCJodHRwOi8vZXhhbXBsZS5vcmcvY2xhaW1zL2xpbWl0IjoiOTk5OTk5OTk5IiwiaHR0cDovL2V4YW1wbGUub3JnL2NsYWltcy9tZW1iZXJzaGlwIjoiUHJlbWl1bSIsImh0dHA6Ly9leGFtcGxlLm9yZy9jbGFpbXMvbGFuZ3VhZ2UiOiJlbi1nYiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvZXhwaXJhdGlvbiI6IjIwOTktMTItMzEiLCJodHRwOi8vZXhhbXBsZS5vcmcvY2xhaW1zL21lbWJlcnNoaXBzdGFydCI6IjIwMjMtMDYtMjIiLCJpc3MiOiJodHRwczovL3NhbmRib3gtYXV0aHNlcnZpY2UucHJpYWlkLmNoIiwiYXVkIjoiaHR0cHM6Ly9oZWFsdGhzZXJ2aWNlLnByaWFpZC5jaCIsImV4cCI6MTY4NzQ2ODA3NCwibmJmIjoxNjg3NDYwODc0fQ.aYaewTKBDMR6DO5CLkBVN0QSYSHdOeUYRqu9ukl5jos",
+			"type": "string"
+		},
+		{
+			"key": "apiMedicBaseURL",
+			"value": "https://sandbox-healthservice.priaid.ch",
+			"type": "string"
+		},
+		{
+			"key": "apiBaseURL",
+			"value": "http://localhost:5000",
+			"type": "string"
+		}
+	]
+}
