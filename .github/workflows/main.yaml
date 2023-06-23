@@ -1,6 +1,10 @@
 name: Backend Testing
 
-on: push
+on:
+  push:
+    paths:
+      - 'backend/src/**'
+      - '.github/**'
 
 jobs:
   test:
