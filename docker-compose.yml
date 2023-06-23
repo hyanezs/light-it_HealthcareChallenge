@@ -1,0 +1,70 @@
+version: '3.8'
+name: healthcare_chg
+services:
+  backend:
+    container_name: healthcare_backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      - POSTGRESQL_HOST=healthcare_postgresql
+      - POSTGRESQL_NAME=healthcare
+      - POSTGRESQL_USER=hernan
+      - POSTGRESQL_PASSWORD=password
+      - HASH_SECRET=429e49b9-96f5-480c-98c5-1060402f6242
+      - SERVER_PORT=5000
+      - FRONTEND_HOST=http://localhost:3000
+      - JWT_SECRET=healthcare_jwt_key
+      - REDIS_URL=redis://healthcare_redis:6379
+
+    ports:
+      - '5000:5000'
+    networks:
+      - healthcare
+    depends_on:
+      - postgresql
+      - redis
+
+  frontend:
+    container_name: healthcare_frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    environment:
+      - REACT_APP_API_URL=http://localhost:5000
+    ports:
+      - '3000:3000'
+    depends_on:
+      - backend
+
+  postgresql:
+    image: postgres:15.1
+    container_name: healthcare_postgresql
+    restart: always
+    environment:
+      - POSTGRES_USER=hernan
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=healthcare
+    ports:
+      - '5432:5432'
+    volumes:
+      - db:/var/lib/postgresql/asp/data
+    networks:
+      - healthcare
+
+  redis:
+    image: redis
+    container_name: healthcare_redis
+    restart: always
+    ports:
+      - '6379:6379'
+    networks:
+      - healthcare
+
+networks:
+  healthcare:
+    name: healthcare
+
+volumes:
+  db:
+    driver: local
