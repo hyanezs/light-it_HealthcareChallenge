@@ -1,7 +1,7 @@
 ![Version](https://img.shields.io/badge/version-0.0.0-blue.svg?cacheSeconds=2592000)
 ![Prerequisite](https://img.shields.io/badge/docker-%3E%3D4.20.0-blue.svg)
 
-# InventSaas Solution's Repository
+# Light-it's Healthcare Challenge Repository
 
 This repository holds the source code for Light-it's Healthcare challenge
 
