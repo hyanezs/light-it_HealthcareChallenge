@@ -4,7 +4,7 @@ import { type Me } from '../types';
 
 const me = async (): Promise<Me | undefined> => {
   try {
-    const response = await internalApi.post<Me>(endpoints.me);
+    const response = await internalApi.get<Me>(endpoints.me);
     return response.data;
   } catch (error: unknown) {
     handleApiError(error as AxiosError);
