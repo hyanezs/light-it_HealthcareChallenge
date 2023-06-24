@@ -1,10 +1,22 @@
-import axios from 'axios';
+import axios, { type AxiosInstance } from 'axios';
 import crypto from 'crypto';
 import { cacheKeys, findInCache, setInCache } from '../dataAccess/cache';
 import { logger } from '../utils';
 
-const { API_MEDIC_AUTH_URL, API_MEDIC_USERNAME, API_MEDIC_PASSWORD } =
-  process.env;
+const {
+  API_MEDIC_AUTH_URL,
+  API_MEDIC_HEALTH_URL,
+  API_MEDIC_USERNAME,
+  API_MEDIC_PASSWORD,
+} = process.env;
+
+const authApiMedic: AxiosInstance = axios.create({
+  baseURL: API_MEDIC_AUTH_URL,
+});
+
+export const healthApiMedic: AxiosInstance = axios.create({
+  baseURL: API_MEDIC_HEALTH_URL,
+});
 
 const encryptPassword = (password: string) => {
   const hmac = crypto.createHmac('md5', password);
@@ -13,25 +25,18 @@ const encryptPassword = (password: string) => {
 };
 
 const acquireToken = async () => {
-  if (!API_MEDIC_AUTH_URL) {
-    throw new Error('API_MEDIC_AUTH_URL is not defined');
-  }
-
-  if (!API_MEDIC_USERNAME || !API_MEDIC_PASSWORD) {
-    throw new Error('API_MEDIC Credentials are not defined');
-  }
-
-  logger.debug(
-    'Checking if API_MEDIC token is in cache, to avoid constant auth req',
-  );
-
-  const hit = await findInCache(cacheKeys.apiMedicToken);
-  if (hit) return hit;
-
   try {
+    if (!API_MEDIC_AUTH_URL) {
+      throw new Error('API_MEDIC_AUTH_URL is not defined');
+    }
+
+    if (!API_MEDIC_USERNAME || !API_MEDIC_PASSWORD) {
+      throw new Error('API_MEDIC Credentials are not defined');
+    }
+
     logger.debug('Acquiring API_MEDIC token');
-    const response = await axios.post(
-      `${API_MEDIC_AUTH_URL}/login`,
+    const response = await authApiMedic.post(
+      `/login`,
       {},
       {
         headers: {
@@ -51,12 +56,30 @@ const acquireToken = async () => {
       60 * 60 * 24 * 30,
     );
     logger.debug('API_MEDIC token saved to cache');
-    console.log({ cache });
-
     return response.data.Token as string;
   } catch (err: any) {
     console.log(err);
   }
 };
 
-export { acquireToken };
+const authenticateApiMedic = async () => {
+  logger.debug(
+    'Checking if API_MEDIC token is in cache, to avoid constant auth req',
+  );
+
+  const existingToken = await findInCache(cacheKeys.apiMedicToken);
+  if (existingToken) {
+    healthApiMedic.interceptors.request.use((config) => {
+      config.params.token = existingToken;
+      return config;
+    });
+  }
+
+  const token = await acquireToken();
+  healthApiMedic.interceptors.request.use((config) => {
+    config.params.token = token;
+    return config;
+  });
+};
+
+export { authenticateApiMedic };
