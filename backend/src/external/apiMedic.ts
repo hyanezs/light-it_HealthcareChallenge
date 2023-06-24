@@ -69,8 +69,11 @@ const authenticateApiMedic = async () => {
     token = await acquireToken();
   }
 
+  // Default token and language for api communication
   healthApiMedic.interceptors.request.use((config) => {
+    config.params = (config.params || {}) as Record<string, any>;
     config.params.token = token;
+    config.params.language = 'en-gb';
     return config;
   });
 };

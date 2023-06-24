@@ -20,6 +20,8 @@ const auth =
         lastName: 'Doe',
         email: '  ',
       } as unknown as UserModel;
+      next();
+      return;
     }
 
     const { token } = req.cookies as Cookies;
