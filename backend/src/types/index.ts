@@ -1,3 +1,3 @@
-import { type Error, ErrorStatusCodes } from './error';
+import { StatusCodes, type Error } from './error';
 
-export { ErrorStatusCodes, type Error };
+export { StatusCodes, type Error };

@@ -1,0 +1,19 @@
+@font-face {
+    font-family: "PowerGrotesk";
+    src:
+        url("./PowerGrotesk.ttf") format("truetype");
+    font-weight: regular;
+}
+
+@font-face {
+    font-family: "Satoshi-Variable";
+    src:
+        url("./Satoshi-Variable.ttf") format("truetype");
+    font-weight: regular;
+}
+
+
+
+.font-power-grotesk {
+    font-family: "PowerGrotesk", system-ui, Avenir, Helvetica, Arial, sans-serif;
+}

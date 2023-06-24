@@ -55,7 +55,9 @@ const validateUserAttributes = (user: RegisterUser): void => {
     throw new BadRequestError(
       `gender: ${gender} is invalid. Needs to be one of: ${Object.values(
         Genders,
-      ).join(', ')}.`,
+      )
+        .filter((g) => typeof g === 'string')
+        .join(', ')}.`,
     );
   }
 

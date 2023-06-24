@@ -1,4 +1,4 @@
-enum ErrorStatusCodes {
+enum StatusCodes {
   OK = 200,
 
   BAD_REQUEST = 400,
@@ -13,10 +13,10 @@ enum ErrorStatusCodes {
 
 type Error = {
   message: string;
-  type: ErrorStatusCodes | undefined;
+  type: StatusCodes | undefined;
   stack?: any;
   sqlMessage?: any;
   name: string;
 };
 
-export { ErrorStatusCodes, type Error };
+export { StatusCodes, type Error };
