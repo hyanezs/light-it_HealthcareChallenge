@@ -6,7 +6,7 @@ import { type RequestWithUser } from '../../types/requests';
 const meController = Router();
 
 // GET /me
-meController.post(
+meController.get(
   '/',
   auth(),
   async (req: RequestWithUser, res: Response, next: NextFunction) => {
