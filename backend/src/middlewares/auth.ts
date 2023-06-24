@@ -22,11 +22,6 @@ const auth =
       } as unknown as UserModel;
     }
 
-    if (process.env.DISABLE_AUTH) {
-      next();
-      return;
-    }
-
     const { token } = req.cookies as Cookies;
 
     if (!token) {
