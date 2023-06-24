@@ -50,15 +50,12 @@ const acquireToken = async () => {
     logger.debug('API_MEDIC token acquired');
     const token = response.data.Token as string;
     logger.debug('Saving API_MEDIC token to cache - TTL 30 days');
-    const cache = await setInCache(
-      cacheKeys.apiMedicToken,
-      token,
-      60 * 60 * 24 * 30,
-    );
+    await setInCache(cacheKeys.apiMedicToken, token, 60 * 60 * 24 * 30);
     logger.debug('API_MEDIC token saved to cache');
     return response.data.Token as string;
   } catch (err: any) {
     console.log(err);
+    return null;
   }
 };
 
@@ -67,15 +64,11 @@ const authenticateApiMedic = async () => {
     'Checking if API_MEDIC token is in cache, to avoid constant auth req',
   );
 
-  const existingToken = await findInCache(cacheKeys.apiMedicToken);
-  if (existingToken) {
-    healthApiMedic.interceptors.request.use((config) => {
-      config.params.token = existingToken;
-      return config;
-    });
+  let token = await findInCache(cacheKeys.apiMedicToken);
+  if (!token) {
+    token = await acquireToken();
   }
 
-  const token = await acquireToken();
   healthApiMedic.interceptors.request.use((config) => {
     config.params.token = token;
     return config;
