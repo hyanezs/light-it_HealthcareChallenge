@@ -1,8 +1,8 @@
 import { Router, type NextFunction, type Response } from 'express';
+import { isCacheUp as getCacheHealth } from '../../dataAccess/cache/cache-access';
 import { isDbUp as getDbHealth } from '../../dataAccess/postgres';
 import { startDate } from '../../server';
 import { StatusCodes } from '../../types';
-import { isCacheUp as getCacheHealth } from '../../utils/cache';
 
 const healthController = Router();
 

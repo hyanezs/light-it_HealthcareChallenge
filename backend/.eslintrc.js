@@ -16,6 +16,12 @@ module.exports = {
 			},
 		},
 		{
+			files: ['./src/external/*.ts'],
+			rules: {
+				'@typescript-eslint/naming-convention': 'off',
+			},
+		},
+		{
 			files: ['./src/dataAccess/repositories/*.ts'],
 			rules: {
 				'@typescript-eslint/ban-types': 'off',
