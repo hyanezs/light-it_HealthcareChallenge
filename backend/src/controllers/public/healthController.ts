@@ -1,7 +1,7 @@
 import { Router, type NextFunction, type Response } from 'express';
 import { isDbUp as getDbHealth } from '../../dataAccess/postgres';
 import { startDate } from '../../server';
-import { ErrorStatusCodes } from '../../types';
+import { StatusCodes } from '../../types';
 import { isCacheUp as getCacheHealth } from '../../utils/cache';
 
 const healthController = Router();
@@ -10,7 +10,7 @@ const healthController = Router();
 healthController.get('/', async (_, res: Response, next: NextFunction) => {
   const isDbUp = await getDbHealth();
   const isCacheUp = await getCacheHealth();
-  return res.status(ErrorStatusCodes.OK).send({
+  return res.status(StatusCodes.OK).send({
     status: {
       db: isDbUp,
       cache: isCacheUp,

@@ -2,7 +2,7 @@ import request from 'supertest';
 import { BadRequestError } from '../../exceptions';
 import { login, register } from '../../logic/sessionLogic';
 import { app } from '../../server';
-import { ErrorStatusCodes } from '../../types';
+import { StatusCodes } from '../../types';
 
 jest.mock('../../logic/sessionLogic');
 describe('POST /auth/login', () => {
@@ -24,7 +24,7 @@ describe('POST /auth/login', () => {
 
     const res = await request(app).post('/auth/login').send(validPostPayload);
 
-    expect(res.statusCode).toBe(ErrorStatusCodes.OK);
+    expect(res.statusCode).toBe(StatusCodes.OK);
     expect(res.headers['set-cookie']).toBeDefined();
     expect(res.headers['set-cookie']).toStrictEqual([
       'token=avalidjwttoken; Domain=localhost; Path=/; HttpOnly; Secure; SameSite=Strict',
@@ -42,7 +42,7 @@ describe('POST /auth/login', () => {
     const res = await request(app).post('/auth/login').send(invalidPayload);
 
     expect(res.body.error).toBe(sampleError);
-    expect(res.statusCode).toBe(ErrorStatusCodes.BAD_REQUEST);
+    expect(res.statusCode).toBe(StatusCodes.BAD_REQUEST);
     expect(mockedLogin).toHaveBeenCalledTimes(1);
   });
 });
@@ -72,7 +72,7 @@ describe('POST /auth/register', () => {
       .post('/auth/register')
       .send(validPostPayload);
 
-    expect(res.statusCode).toBe(ErrorStatusCodes.OK);
+    expect(res.statusCode).toBe(StatusCodes.OK);
     expect(res.headers['set-cookie']).toBeDefined();
     expect(res.headers['set-cookie']).toStrictEqual([
       'token=avalidjwttoken; Domain=localhost; Path=/; HttpOnly; Secure; SameSite=Strict',
@@ -98,7 +98,7 @@ describe('POST /auth/register', () => {
     const res = await request(app).post('/auth/register').send(invalidPayload);
 
     expect(res.body.error).toBe(sampleError);
-    expect(res.statusCode).toBe(ErrorStatusCodes.BAD_REQUEST);
+    expect(res.statusCode).toBe(StatusCodes.BAD_REQUEST);
     expect(mockedRegister).toHaveBeenCalledTimes(1);
   });
 });
@@ -111,7 +111,7 @@ describe('POST /auth/logout', () => {
   test('should return a 200-OK code with a reset-cookie request', async () => {
     const res = await request(app).post('/auth/logout').send({});
 
-    expect(res.statusCode).toBe(ErrorStatusCodes.OK);
+    expect(res.statusCode).toBe(StatusCodes.OK);
     expect(res.headers['set-cookie']).toBeDefined();
   });
 });

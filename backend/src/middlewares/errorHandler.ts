@@ -6,7 +6,7 @@ import {
   NotFoundError,
   UnauthorizedError,
 } from '../exceptions';
-import { ErrorStatusCodes, type Error } from '../types';
+import { StatusCodes, type Error } from '../types';
 import { logger } from '../utils';
 
 // Logs error & respond to clients
@@ -20,17 +20,17 @@ const errorHandler = (
   let code = 500;
 
   if (e instanceof BadRequestError) {
-    code = ErrorStatusCodes.BAD_REQUEST;
+    code = StatusCodes.BAD_REQUEST;
   } else if (e instanceof ConflictError) {
-    code = ErrorStatusCodes.CONFLICT;
+    code = StatusCodes.CONFLICT;
   } else if (e instanceof ForbiddenError) {
-    code = ErrorStatusCodes.FORBIDDEN;
+    code = StatusCodes.FORBIDDEN;
   } else if (e instanceof UnauthorizedError) {
-    code = ErrorStatusCodes.UNAUTHORIZED;
+    code = StatusCodes.UNAUTHORIZED;
   } else if (e instanceof NotFoundError) {
-    code = ErrorStatusCodes.NOT_FOUND;
+    code = StatusCodes.NOT_FOUND;
   } else {
-    code = ErrorStatusCodes.SERVER_ERROR;
+    code = StatusCodes.SERVER_ERROR;
   }
 
   logger.warn(e.message);

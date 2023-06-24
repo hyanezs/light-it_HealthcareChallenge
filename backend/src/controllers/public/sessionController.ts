@@ -5,7 +5,7 @@ import {
   type Response,
 } from 'express';
 import { login, register } from '../../logic/sessionLogic';
-import { ErrorStatusCodes } from '../../types';
+import { StatusCodes } from '../../types';
 import type { Login, RegisterUser } from '../../types/requests';
 
 const sessionController = Router();
@@ -19,7 +19,7 @@ sessionController.post(
 
       const token = await register(userData);
       res
-        .status(ErrorStatusCodes.OK)
+        .status(StatusCodes.OK)
         .cookie('token', token, {
           sameSite: 'strict',
           httpOnly: true,
@@ -43,7 +43,7 @@ sessionController.post(
       const { email, password } = req.body as Login;
       const token: string = await login(email, password);
       res
-        .status(ErrorStatusCodes.OK)
+        .status(StatusCodes.OK)
         .cookie('token', token, {
           sameSite: 'strict',
           httpOnly: true,
@@ -51,7 +51,7 @@ sessionController.post(
           domain: 'localhost',
         })
         .send({
-          success: `Successful login for ${email}.`,
+          success: `Successful login! Welcome back.`,
         });
     } catch (e: any) {
       next(e);
@@ -65,7 +65,7 @@ sessionController.post(
   async (_, res: Response, next: NextFunction) => {
     try {
       res
-        .status(ErrorStatusCodes.OK)
+        .status(StatusCodes.OK)
         .clearCookie('token', {
           domain: 'localhost',
         })
