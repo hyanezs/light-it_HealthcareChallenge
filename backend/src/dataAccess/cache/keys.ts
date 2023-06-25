@@ -1,5 +1,6 @@
 const cacheKeys = {
-    apiMedicToken: 'apiMedicToken',
-}
+  apiMedicToken: 'apiMedic-token',
+  apiMedicSymptoms: 'apiMedic-symptoms',
+};
 
 export default cacheKeys;
