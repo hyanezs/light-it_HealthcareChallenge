@@ -11,13 +11,15 @@ meController.get(
   auth(),
   async (req: RequestWithUser, res: Response, next: NextFunction) => {
     try {
-      const { id, email, firstName, lastName } = req.user!;
+      const { id, email, firstName, lastName, gender, birthdate } = req.user!;
 
       res.status(StatusCodes.OK).send({
         id,
         email,
         firstName,
         lastName,
+        gender,
+        birthdate,
       });
     } catch (e: any) {
       next(e);
