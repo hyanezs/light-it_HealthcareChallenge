@@ -1,22 +1,10 @@
-import axios, { type AxiosInstance } from 'axios';
 import crypto from 'crypto';
-import { cacheKeys, findInCache, setInCache } from '../dataAccess/cache';
-import { logger } from '../utils';
+import { cacheKeys, findInCache, setInCache } from '../../dataAccess/cache';
+import { logger } from '../../utils';
+import { authApiMedic, healthApiMedic } from './instances';
 
-const {
-  API_MEDIC_AUTH_URL,
-  API_MEDIC_HEALTH_URL,
-  API_MEDIC_USERNAME,
-  API_MEDIC_PASSWORD,
-} = process.env;
-
-const authApiMedic: AxiosInstance = axios.create({
-  baseURL: API_MEDIC_AUTH_URL,
-});
-
-export const healthApiMedic: AxiosInstance = axios.create({
-  baseURL: API_MEDIC_HEALTH_URL,
-});
+const { API_MEDIC_AUTH_URL, API_MEDIC_USERNAME, API_MEDIC_PASSWORD } =
+  process.env;
 
 const encryptPassword = (password: string) => {
   const hmac = crypto.createHmac('md5', password);

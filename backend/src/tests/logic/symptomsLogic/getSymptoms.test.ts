@@ -1,100 +1,70 @@
-import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
 import { clearCachePreffix } from '../../../dataAccess/cache';
-import {
-  authenticateApiMedic,
-  healthApiMedic,
-} from '../../../external/apiMedic';
+import { ServerError } from '../../../exceptions';
+import { authenticateApiMedic } from '../../../external/apiMedic/authenticate';
+import { healthApiMedic } from '../../../external/apiMedic/instances';
 import { getSymptoms } from '../../../logic/symptomsLogic';
 
-jest.mock('../../../external/apiMedic');
-jest.mock('axios');
+jest.mock('../../../external/apiMedic/authenticate');
 jest.mock('../../../dataAccess/cache');
+
+const { API_MEDIC_HEALTH_URL } = process.env;
 
 describe('getSymptoms', () => {
   const mockedAuthenticateApiMedic = authenticateApiMedic as jest.Mock;
   const mockedClearCachePreffix = clearCachePreffix as jest.Mock;
+  let mockedApiMedic = new MockAdapter(healthApiMedic);
+
+  afterEach(() => {
+    jest.clearAllMocks();
+    mockedApiMedic.reset();
+  });
 
   it('should return symptoms when the API call is successful', async () => {
     const mockResponse = {
       data: ['symptom1', 'symptom2'],
-      status: 200,
-      statusText: 'OK',
-      headers: {},
     };
 
-    (axios.create as jest.Mock<any, any>).mockReturnValue({
-      interceptors: {
-        request: { use: jest.fn(), eject: jest.fn() },
-        response: { use: jest.fn(), eject: jest.fn() },
-      },
-
-      get: jest.fn().mockResolvedValue(mockResponse),
-    });
+    mockedApiMedic.onGet(`/symptoms`).reply(200, mockResponse);
 
     const result = await getSymptoms();
 
-    expect(healthApiMedic.get).toHaveBeenCalledWith('/symptoms');
-    expect(result).toEqual(['symptom1', 'symptom2']);
+    expect(mockedApiMedic.history.get.length).toBe(1);
+    expect(mockedApiMedic.history.get[0].url).toBe('/symptoms');
+    expect(result).toEqual({ data: ['symptom1', 'symptom2'] });
   });
 
   it('should retry the API call after refreshing the token', async () => {
-    const mockErrorResponse = {
-      data: 'Missing or invalid token',
-      status: 400,
-      statusText: 'Bad Request',
-      headers: {},
-    };
-
-    const mockSuccessfulResponse = {
+    const mockResponse = {
       data: ['symptom1', 'symptom2'],
-      status: 200,
-      statusText: 'OK',
-      headers: {},
     };
 
-    (axios.create as jest.Mock<any, any>).mockReturnValue({
-      interceptors: {
-        request: { use: jest.fn(), eject: jest.fn() },
-        response: { use: jest.fn(), eject: jest.fn() },
-      },
-
-      get: jest
-        .fn()
-        .mockRejectedValueOnce(mockErrorResponse)
-        .mockResolvedValueOnce(mockSuccessfulResponse),
-    });
+    mockedApiMedic
+      .onGet('/symptoms')
+      .replyOnce(400, 'Missing or invalid token')
+      .onGet('/symptoms')
+      .replyOnce(200, mockResponse);
 
     mockedAuthenticateApiMedic.mockImplementation(() => {});
     mockedClearCachePreffix.mockImplementation(() => {});
 
     const result = await getSymptoms();
 
-    expect(healthApiMedic.get).toHaveBeenCalledWith('/symptoms');
-    expect(axios).toHaveBeenCalledTimes(1); // Ensure the token was refreshed
-    expect(healthApiMedic.get).toHaveBeenCalledTimes(2); // Ensure the API call was retried
-    expect(result).toEqual(['symptom1', 'symptom2']);
+    expect(mockedApiMedic.history.get.length).toBe(2);
+    expect(mockedApiMedic.history.get[0].url).toBe('/symptoms');
+    expect(mockedApiMedic.history.get[1].url).toBe('/symptoms');
+    expect(result).toEqual({ data: ['symptom1', 'symptom2'] });
     expect(clearCachePreffix).toHaveBeenCalledWith('apiMedicToken');
     expect(authenticateApiMedic).toHaveBeenCalledTimes(1);
   });
 
   it('should throw an error when the API call fails with an unknown error', async () => {
-    const mockErrorResponse = {
-      data: 'Some error message',
-      status: 500,
-      statusText: 'Internal Server Error',
-      headers: {},
-    };
+    mockedApiMedic.onGet('/symptoms').replyOnce(500, 'Some error message');
 
-    (axios.create as jest.Mock<any, any>).mockReturnValue({
-      interceptors: {
-        request: { use: jest.fn(), eject: jest.fn() },
-        response: { use: jest.fn(), eject: jest.fn() },
-      },
-
-      get: jest.fn().mockRejectedValueOnce(mockErrorResponse),
-    });
-
-    await expect(getSymptoms()).rejects.toEqual(mockErrorResponse);
-    expect(healthApiMedic.get).toHaveBeenCalledWith('/symptoms');
+    await expect(getSymptoms()).rejects.toStrictEqual(
+      new ServerError('Error getting symptoms from API Medic'),
+    );
+    expect(mockedApiMedic.history.get.length).toBe(1);
+    expect(mockedApiMedic.history.get[0].url).toBe('/symptoms');
   });
 });

@@ -13,7 +13,7 @@ symptomsController.get(
   async (_req: RequestWithUser, res: Response, next: NextFunction) => {
     try {
       const symptoms = await getSymptoms();
-      res.status(StatusCodes.OK).send(symptoms);
+      res.status(StatusCodes.OK).send({ data: symptoms });
     } catch (e: any) {
       next(e);
     }

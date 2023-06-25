@@ -1,7 +1,9 @@
 import axios, { type AxiosError } from 'axios';
 import { cacheKeys, clearCachePreffix } from '../dataAccess/cache';
+import { ServerError } from '../exceptions';
+import { authenticateApiMedic } from '../external/apiMedic/authenticate';
+import { healthApiMedic } from '../external/apiMedic/instances';
 import { type Symptom } from '../types';
-import { authenticateApiMedic, healthApiMedic } from './../external/apiMedic';
 
 const getSymptoms = async (): Promise<Symptom[] | undefined> => {
   try {
@@ -21,7 +23,7 @@ const getSymptoms = async (): Promise<Symptom[] | undefined> => {
       }
     }
 
-    throw error;
+    throw new ServerError('Error getting symptoms from API Medic');
   }
 };
 

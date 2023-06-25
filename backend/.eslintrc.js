@@ -16,7 +16,7 @@ module.exports = {
 			},
 		},
 		{
-			files: ['./src/external/*.ts'],
+			files: ['./src/external/**'],
 			rules: {
 				'@typescript-eslint/naming-convention': 'off',
 			},

@@ -3,7 +3,7 @@ dotenv.config();
 
 import { initRedis } from './src/dataAccess/cache/cache-access';
 import { initMasterDb } from './src/dataAccess/postgres';
-import { authenticateApiMedic } from './src/external/apiMedic';
+import { authenticateApiMedic } from './src/external/apiMedic/instances';
 import { initServer } from './src/server';
 import { logger } from './src/utils';
 

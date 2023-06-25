@@ -1,11 +1,18 @@
 import request from 'supertest';
-import * as symptomsLogic from '../../logic/symptomsLogic';
+import { getSymptoms } from '../../logic/symptomsLogic';
 import { app } from '../../server';
 import { Symptom } from '../../types';
 
+jest.mock('../../logic/symptomsLogic');
+
 describe('GET /symptoms', () => {
+  const mockedGetSymptoms = getSymptoms as jest.Mock;
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('should return a valid response with symptoms', async () => {
-    // Mock the getSymptoms function
     const mockedSymptoms: Symptom[] = [
       {
         ID: 1,
@@ -17,21 +24,18 @@ describe('GET /symptoms', () => {
       },
     ];
 
-    jest.spyOn(symptomsLogic, 'getSymptoms').mockResolvedValue(mockedSymptoms);
+    mockedGetSymptoms.mockResolvedValue(mockedSymptoms);
 
     const response = await request(app).get('/symptoms');
 
     expect(response.status).toBe(200);
-    expect(response.body).toEqual(mockedSymptoms);
-    // Add additional assertions as needed
+    expect(response.body).toEqual({ data: mockedSymptoms });
   });
 
   it('should handle errors and return an error response', async () => {
-    // Mock the getSymptoms function to throw an error
     const errorMessage = 'An error occurred';
-    jest
-      .spyOn(symptomsLogic, 'getSymptoms')
-      .mockRejectedValue(new Error(errorMessage));
+
+    mockedGetSymptoms.mockRejectedValue(new Error(errorMessage));
 
     const response = await request(app).get('/symptoms');
 
