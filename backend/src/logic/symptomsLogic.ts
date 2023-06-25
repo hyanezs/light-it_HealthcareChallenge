@@ -41,6 +41,7 @@ const getSymptoms = async (): Promise<Symptom[] | undefined> => {
       }
     }
 
+    logger.error({ error });
     throw new ServerError('Error getting symptoms from API Medic');
   }
 };
