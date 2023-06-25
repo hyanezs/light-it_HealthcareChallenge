@@ -5,4 +5,9 @@ type Me = {
   lastName: string;
 };
 
-export type { Me };
+type Symptom = {
+  ID: number;
+  Name: string;
+};
+
+export type { Me, Symptom };

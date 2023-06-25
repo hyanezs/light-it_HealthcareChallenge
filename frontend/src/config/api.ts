@@ -8,6 +8,7 @@ export const { VITE_API_URL } = import.meta.env as unknown as Env;
 export const endpoints = {
   session: '/auth',
   me: '/me',
+  symptoms: '/symptoms',
 };
 
 export const internalApi = axios.create({

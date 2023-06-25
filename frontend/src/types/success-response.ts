@@ -2,4 +2,4 @@ type SuccessResponse = {
   success: string;
 };
 
-export type { SuccessResponse };
+export default SuccessResponse;
