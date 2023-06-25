@@ -8,5 +8,5 @@ export default async (_req: Request, _res: Response, next: NextFunction) => {
 
   setTimeout(() => {
     next();
-  }, Math.floor(Math.random() * 2000 + 100));
+  }, Math.floor(Math.random() * 1000 + 100));
 };
