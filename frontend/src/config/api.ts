@@ -8,6 +8,8 @@ export const { VITE_API_URL } = import.meta.env as unknown as Env;
 export const endpoints = {
   session: '/auth',
   me: '/me',
+  symptoms: '/symptoms',
+  diagnoses: '/diagnoses',
 };
 
 export const internalApi = axios.create({
@@ -23,7 +25,8 @@ export const handleApiError = (error: AxiosError) => {
     error: string;
   };
   const message =
-    data.error ??
+    data?.error ??
+    error.message ??
     'Something went wrong on our side. Please try again later, or let us know if this issue persists.';
 
   console.error(error);

@@ -1,18 +1,24 @@
 import * as dotenv from 'dotenv';
 dotenv.config();
 
+import { initRedis } from './src/dataAccess/cache/cache-access';
 import { initMasterDb } from './src/dataAccess/postgres';
+import { seedPostgreSql } from './src/dataAccess/seed';
+import { authenticateApiMedic } from './src/external/apiMedic/authenticate';
 import { initServer } from './src/server';
 import { logger } from './src/utils';
-import { initRedis } from './src/utils/cache';
 
 (async () => {
   try {
-    const successDb = await initMasterDb();
-    if (!successDb) throw new Error('Databases init failed');
+    const connectedDb = await initMasterDb();
+    if (!connectedDb) throw new Error('Databases init failed');
 
-    const successCache = await initRedis();
-    if (!successCache) throw new Error('Cache init failed.');
+    await seedPostgreSql();
+
+    const connectedCache = await initRedis();
+    if (!connectedCache) throw new Error('Cache init failed.');
+
+    await authenticateApiMedic();
 
     await initServer();
   } catch (err: any) {

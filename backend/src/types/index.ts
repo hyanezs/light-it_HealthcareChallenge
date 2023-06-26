@@ -1,3 +1,5 @@
+import { Genders } from './constants';
 import { StatusCodes, type Error } from './error';
+import type Symptom from './external/symptoms';
 
-export { StatusCodes, type Error };
+export { Genders, StatusCodes, type Error, type Symptom };

@@ -16,13 +16,12 @@ const auth =
     if (process.env.NODE_ENV === 'test') {
       req.user = {
         id: 1,
-        firstName: 'John',
+        firstName: 'Carly',
         lastName: 'Doe',
         email: '  ',
+        gender: 2,
+        birthdate: '1990-01-01',
       } as unknown as UserModel;
-    }
-
-    if (process.env.DISABLE_AUTH) {
       next();
       return;
     }
@@ -46,13 +45,13 @@ const auth =
         return;
       }
 
-      const exists = await getUserById(decodedUser?.id);
-      if (!exists) {
+      const userInDb = await getUserById(decodedUser?.id);
+      if (!userInDb) {
         next(new UnauthorizedError());
         return;
       }
 
-      req.user = decodedUser;
+      req.user = userInDb;
       next();
     } catch (ex: any) {
       if (ex.name === 'TokenExpiredError') {

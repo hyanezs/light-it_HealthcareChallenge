@@ -6,23 +6,4 @@ const Gender = masterDb.define('gender', {
   label: { type: DataTypes.STRING, allowNull: false },
 });
 
-void Gender.sync().then(async () => {
-  await Gender.create({
-    id: 0,
-    label: 'UNKNOWN',
-  });
-  await Gender.create({
-    id: 1,
-    label: 'MALE',
-  });
-  await Gender.create({
-    id: 2,
-    label: 'FEMALE',
-  });
-  await Gender.create({
-    id: 9,
-    label: 'NOT_APPLICABLE',
-  });
-});
-
 export default Gender;

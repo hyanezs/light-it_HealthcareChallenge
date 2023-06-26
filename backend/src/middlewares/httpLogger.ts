@@ -7,9 +7,7 @@ const stream = {
   },
 };
 
-const skip = () => {
-  return false;
-};
+const skip = () => false;
 
 export default morgan(
   ':method :url :status :response-time ms - :res[content-length]',

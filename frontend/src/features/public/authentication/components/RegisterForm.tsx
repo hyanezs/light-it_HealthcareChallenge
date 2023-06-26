@@ -15,7 +15,7 @@ type passwordType = 'password' | 'text';
 
 const RegisterForm = () => {
   const [registering, setRegistering] = useState(false);
-  const [selectedGender, setSelectedGender] = useState('gender');
+  const [selectedGender, setSelectedGender] = useState<string | undefined>(undefined);
   const [togglePasswordVisibility, setTogglePasswordVisibility] = useState<
     Record<string, passwordType>
   >({
@@ -129,9 +129,6 @@ const RegisterForm = () => {
                 }}
                 value={selectedGender}
               >
-                <option value={'gender'} disabled selected>
-                  {input.placeholder ?? camelToTitle(input.name)}
-                </option>
                 {input.options?.map((option: Option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}

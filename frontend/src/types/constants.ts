@@ -1,8 +1,8 @@
 enum Genders {
-  UNKNOWN,
+  // UNKNOWN,
   MALE,
   FEMALE,
-  NOT_APPLICABLE,
+  // NOT_APPLICABLE,
 }
 
 export { Genders };

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { createClient } from 'redis';
-import logger from './logger';
+import logger from '../../utils/logger';
 
 const redisClient = createClient({
   url: process.env.REDIS_URL!,
@@ -13,7 +13,7 @@ const redisClient = createClient({
 
 const initRedis = async () => {
   try {
-    logger.info('Trying to connect to Redis Cache');
+    logger.debug('Trying to connect to Redis Cache');
     redisClient.on('error', (err: any) =>
       logger.error('Redis Client Error', err),
     );
@@ -22,7 +22,7 @@ const initRedis = async () => {
       await redisClient.connect();
     }
 
-    logger.info('Redis Cache connected successfully');
+    logger.debug('Redis Cache connected successfully');
     return true;
   } catch (error) {
     logger.error('Unable to connect to Redis database:', error);
@@ -32,17 +32,18 @@ const initRedis = async () => {
 
 const findInCache = async (cacheId: string): Promise<string | null> => {
   const inCache = await redisClient.get(cacheId);
-  if (inCache) logger.info(`Cache hit, key: ${cacheId}. Data: ${inCache}`);
-  else logger.info(`Cache miss, key: ${cacheId}`);
+  if (inCache) logger.debug(`Cache hit, key: ${cacheId}.`);
+  else logger.debug(`Cache miss, key: ${cacheId}`);
   return inCache;
 };
 
 const setInCache = async (
   cacheId: string,
   cacheItem: string,
+  ttl?: number,
 ): Promise<string> => {
-  logger.info(`Set ${cacheId} in cache.`);
-  const cacheTtl = 3600;
+  logger.debug(`Set ${cacheId} in cache.`);
+  const cacheTtl = ttl ?? 3600;
 
   return redisClient.setEx(cacheId, cacheTtl, cacheItem);
 };

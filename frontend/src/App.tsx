@@ -11,7 +11,7 @@ import routes from './routes';
 
 const App: React.FC = () => (
   <div className="h-screen p-5">
-    <ToastContainer position="bottom-right" />
+    <ToastContainer position="top-center" pauseOnFocusLoss={false} />
     <BrowserRouter>
       <GlobalNavigation />
       <Routes>

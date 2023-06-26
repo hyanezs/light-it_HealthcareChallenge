@@ -1,3 +1,4 @@
+import Gender from './gender';
 import User from './user';
 
-export { User };
+export { Gender, User };

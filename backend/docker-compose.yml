@@ -16,6 +16,7 @@ services:
       - FRONTEND_HOST=http://localhost:3000
       - JWT_SECRET=healthcare_jwt_key
       - REDIS_URL=redis://healthcare_redis:6379
+      - ENV=development
 
     ports:
       - '5000:5000'

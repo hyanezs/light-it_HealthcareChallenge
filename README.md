@@ -11,7 +11,7 @@ The application provides the following features:
 
 - User registration and login
 - Symptoms evaluation
-- Diagnosis history
+- Diagnoses history
 
 ## Technologies
 

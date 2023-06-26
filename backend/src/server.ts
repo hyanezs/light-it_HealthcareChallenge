@@ -4,7 +4,12 @@ import express from 'express';
 import winston from 'winston';
 import privateRoutes from './controllers/private/privateRoutes';
 import publicRoutes from './controllers/public/publicRoutes';
-import { appendTimestamp, errorHandler, httpLogger } from './middlewares';
+import {
+  appendTimestamp,
+  devDelay,
+  errorHandler,
+  httpLogger,
+} from './middlewares';
 import logger, { consoleLoggerFormat } from './utils/logger';
 
 const port = process.env.SERVER_PORT ?? 5001;
@@ -23,6 +28,11 @@ app.use(
 );
 app.use(cookieParser());
 app.use(appendTimestamp);
+
+if (process.env.ENV === 'development') {
+  app.use(devDelay);
+}
+
 app.use(httpLogger);
 app.use(publicRoutes);
 app.use(privateRoutes);
@@ -30,7 +40,7 @@ app.use(privateRoutes);
 app.use(errorHandler);
 
 app.get('/', (req, res) => {
-  res.send('Inventsaas API');
+  res.send('Healthcare API');
 });
 
 async function initServer(): Promise<void> {

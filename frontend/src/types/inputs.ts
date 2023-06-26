@@ -1,7 +1,7 @@
 import { type HTMLInputTypeAttribute } from 'react';
 
 type Option = {
-  value: string;
+  value: string | number;
   label: string;
 };
 

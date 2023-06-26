@@ -16,16 +16,16 @@ const masterDb = new Sequelize(config.name, config.user, config.password, {
 
 const initMasterDb = async () => {
   try {
-    logger.info('Trying to connect to postgreSQL db.');
+    logger.debug('Trying to connect to postgreSQL db.');
     await masterDb.authenticate();
     await masterDb.sync({ force: config.recreate });
 
-    logger.info(
+    logger.debug(
       'Connection to postgreSQL db has been established successfully.',
     );
     return true;
   } catch (error) {
-    logger.info('Unable to connect to postgreSQL db:', error);
+    logger.debug('Unable to connect to postgreSQL db:', error);
     return false;
   }
 };
@@ -35,7 +35,7 @@ const isDbUp = async () => {
     await masterDb.authenticate();
     return 'Database (postgreSQL) is accepting connections.';
   } catch (error) {
-    logger.info('Unable to connect to postgreSQL db:', error);
+    logger.debug('Unable to connect to postgreSQL db:', error);
     return 'Database (postgreSQL) is down.';
   }
 };
