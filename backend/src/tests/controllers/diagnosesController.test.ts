@@ -1,16 +1,25 @@
 import request from 'supertest';
-import getDiagnoses from '../../logic/diagnosesLogic';
+import { getPossibleDiagnoses } from '../../logic/diagnosesLogic';
 import { app } from '../../server';
-import { Diagnosis } from '../../types/external/diagnoses';
+import { Diagnosis } from '../../types/external/external-diagnosis';
 
 jest.mock('../../logic/diagnosesLogic');
 
 describe('GET /diagnoses', () => {
-  const mockedGetDiagnoses = getDiagnoses as jest.Mock;
+  const mockedGetPossibleDiagnoses = getPossibleDiagnoses as jest.Mock;
 
   afterEach(() => {
     jest.clearAllMocks();
   });
+
+  const user = {
+    birthdate: '1990-01-01',
+    email: '  ',
+    firstName: 'Carly',
+    gender: 2,
+    id: 1,
+    lastName: 'Doe',
+  };
 
   it('should return a valid response with diagnoses', async () => {
     const mockedDiagnoses: Diagnosis[] = [
@@ -38,7 +47,7 @@ describe('GET /diagnoses', () => {
       },
     ];
 
-    mockedGetDiagnoses.mockResolvedValue(mockedDiagnoses);
+    mockedGetPossibleDiagnoses.mockResolvedValue(mockedDiagnoses);
 
     const response = await request(app)
       .get('/diagnoses')
@@ -49,11 +58,14 @@ describe('GET /diagnoses', () => {
       });
 
     expect(response.status).toBe(200);
-    expect(mockedGetDiagnoses).toHaveBeenCalledWith({
-      symptomsIds: ['1', '2'],
-      gender: 'male',
-      birthyear: '2000',
-    });
+    expect(mockedGetPossibleDiagnoses).toHaveBeenCalledWith(
+      {
+        symptomsIds: ['1', '2'],
+        gender: 'male',
+        birthyear: '2000',
+      },
+      user,
+    );
     expect(response.body).toEqual({ data: mockedDiagnoses });
   });
 
@@ -83,7 +95,7 @@ describe('GET /diagnoses', () => {
       },
     ];
 
-    mockedGetDiagnoses.mockResolvedValue(mockedDiagnoses);
+    mockedGetPossibleDiagnoses.mockResolvedValue(mockedDiagnoses);
 
     const response = await request(app)
       .get('/diagnoses')
@@ -92,18 +104,21 @@ describe('GET /diagnoses', () => {
       });
 
     expect(response.status).toBe(200);
-    expect(mockedGetDiagnoses).toHaveBeenCalledWith({
-      symptomsIds: ['1', '2'],
-      gender: 'female',
-      birthyear: '1990',
-    });
+    expect(mockedGetPossibleDiagnoses).toHaveBeenCalledWith(
+      {
+        symptomsIds: ['1', '2'],
+        gender: 'female',
+        birthyear: '1990',
+      },
+      user,
+    );
     expect(response.body).toEqual({ data: mockedDiagnoses });
   });
 
   it('should handle errors and return an error response', async () => {
     const errorMessage = 'An error occurred';
 
-    mockedGetDiagnoses.mockRejectedValue(new Error(errorMessage));
+    mockedGetPossibleDiagnoses.mockRejectedValue(new Error(errorMessage));
 
     const response = await request(app).get('/diagnoses');
 

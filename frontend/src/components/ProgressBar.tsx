@@ -1,35 +1,34 @@
 import React from 'react';
+import colors from '../config/colors';
 import { classNames } from '../utils';
 
 type ProgressBarProps = {
   progress: number;
 };
 
-const getBorderColor = (progress: number) => {
-  if (progress < 25) return 'border-red-500';
-  if (progress < 50) return 'border-yellow-500';
-  if (progress < 75) return 'border-blue-500';
-  return 'border-green-500';
-};
-
-const getColor = (progress: number) => {
-  if (progress < 25) return 'bg-red-200';
-  if (progress < 50) return 'bg-yellow-200';
-  if (progress < 75) return 'bg-blue-200';
-  return 'bg-green-200';
+const getColor = (progress: number, weight: keyof typeof colors.amber) => {
+  if (progress < 25) return colors.red[weight];
+  if (progress < 50) return colors.yellow[weight];
+  if (progress < 75) return colors.blue[weight];
+  return colors.green[weight];
 };
 
 const ProgressBar = ({ progress }: ProgressBarProps) => (
   <div className="w-full relative">
-    <div className={classNames(getBorderColor(progress), `rounded-full border border-red-500 p-1`)}>
+    <div
+      className={'rounded-full border p-1'}
+      style={{
+        borderColor: getColor(progress, '400'),
+      }}
+    >
       <div
         className={classNames(
-          getColor(progress),
           `flex h-6 items-center justify-center rounded-full 
         text-xs leading-none`
         )}
         style={{
           width: `${progress}%`,
+          backgroundColor: getColor(progress, '200'),
         }}
       />
       <span

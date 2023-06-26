@@ -1,9 +1,9 @@
 import { BadRequestError } from '../../../exceptions';
 import { Genders } from '../../../types';
 import { GetDiagnosesParams } from '../../../types/requests';
-import { validateGetDiagnosesParams } from '../../../validations';
+import { validateGetPossibleDiagnosesParams } from '../../../validations';
 
-describe('validateGetDiagnosesParams', () => {
+describe('validateGetPossibleDiagnosesParams', () => {
   it('should return gracefully on valid payload', () => {
     const params: GetDiagnosesParams = {
       birthyear: '2000',
@@ -11,7 +11,7 @@ describe('validateGetDiagnosesParams', () => {
       symptomsIds: ['1', '2'],
     };
 
-    const result = validateGetDiagnosesParams(params);
+    const result = validateGetPossibleDiagnosesParams(params);
 
     expect(result).toBeUndefined();
   });
@@ -23,7 +23,7 @@ describe('validateGetDiagnosesParams', () => {
     };
 
     expect(() => {
-      validateGetDiagnosesParams(params as GetDiagnosesParams);
+      validateGetPossibleDiagnosesParams(params as GetDiagnosesParams);
     }).toThrow(new BadRequestError('queryParam: symptomsIds is required'));
   });
 
@@ -35,7 +35,7 @@ describe('validateGetDiagnosesParams', () => {
     };
 
     expect(() => {
-      validateGetDiagnosesParams(params as unknown as GetDiagnosesParams);
+      validateGetPossibleDiagnosesParams(params as unknown as GetDiagnosesParams);
     }).toThrow(new BadRequestError('queryParam: symptomsIds must be an array'));
   });
 
@@ -47,7 +47,7 @@ describe('validateGetDiagnosesParams', () => {
     };
 
     expect(() => {
-      validateGetDiagnosesParams(params as unknown as GetDiagnosesParams);
+      validateGetPossibleDiagnosesParams(params as unknown as GetDiagnosesParams);
     }).toThrow(
       new BadRequestError('queryParam: symptomsIds must not be empty'),
     );
@@ -61,7 +61,7 @@ describe('validateGetDiagnosesParams', () => {
     };
 
     expect(() => {
-      validateGetDiagnosesParams(params as unknown as GetDiagnosesParams);
+      validateGetPossibleDiagnosesParams(params as unknown as GetDiagnosesParams);
     }).toThrow(
       new BadRequestError(
         'queryParam: symptomsIds must be an array of positive numbers',
@@ -77,7 +77,7 @@ describe('validateGetDiagnosesParams', () => {
     };
 
     expect(() => {
-      validateGetDiagnosesParams(params as unknown as GetDiagnosesParams);
+      validateGetPossibleDiagnosesParams(params as unknown as GetDiagnosesParams);
     }).toThrow(
       new BadRequestError(
         'queryParam: symptomsIds must be an array of positive numbers',
@@ -93,7 +93,7 @@ describe('validateGetDiagnosesParams', () => {
     };
 
     expect(() => {
-      validateGetDiagnosesParams(params as unknown as GetDiagnosesParams);
+      validateGetPossibleDiagnosesParams(params as unknown as GetDiagnosesParams);
     }).toThrow(
       new BadRequestError(
         `queryParam: Gender - a is invalid. Needs to be one of: ${Object.values(
@@ -114,7 +114,7 @@ describe('validateGetDiagnosesParams', () => {
     };
 
     expect(() => {
-      validateGetDiagnosesParams(params as unknown as GetDiagnosesParams);
+      validateGetPossibleDiagnosesParams(params as unknown as GetDiagnosesParams);
     }).toThrow(
       new BadRequestError('queryParam: birthyear must be a valid year'),
     );
@@ -128,7 +128,7 @@ describe('validateGetDiagnosesParams', () => {
     };
 
     expect(() => {
-      validateGetDiagnosesParams(params as unknown as GetDiagnosesParams);
+      validateGetPossibleDiagnosesParams(params as unknown as GetDiagnosesParams);
     }).toThrow(
       new BadRequestError('queryParam: birthyear must be a valid year'),
     );

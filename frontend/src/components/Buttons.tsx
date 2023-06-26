@@ -10,6 +10,7 @@ type ButtonProps = {
   className?: string;
   loading?: boolean;
   type?: 'button' | 'submit' | 'reset';
+  style?: React.CSSProperties;
 };
 
 const PrimaryButton = ({ children, onClick, loading, type }: ButtonProps) => (
@@ -33,12 +34,13 @@ const PrimaryButton = ({ children, onClick, loading, type }: ButtonProps) => (
   </button>
 );
 
-const SecondaryButton = ({ children, onClick }: ButtonProps) => (
+const SecondaryButton = ({ children, onClick, style }: ButtonProps) => (
   <button
     type="button"
     className={`text-cyan-300 hover:text-cyan-200 font-semibold 
     h-10 my-2 rounded-md mx-auto w-1/2`}
     onClick={onClick}
+    style={style}
   >
     {children}
   </button>

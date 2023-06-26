@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/consistent-type-definitions */
-import type dayjs from 'dayjs';
+import { type Dayjs } from 'dayjs';
 import {
   type CreationOptional,
   type InferAttributes,
@@ -17,9 +17,40 @@ interface UserModel
   firstName: string;
   lastName: string;
   gender: Genders;
-  birthdate: dayjs.Dayjs;
+  birthdate: Dayjs;
   email: string;
   password: string;
 }
 
-export type { UserModel };
+interface DiagnosisModel
+  extends Model<
+    InferAttributes<DiagnosisModel>,
+    InferCreationAttributes<DiagnosisModel>
+  > {
+  id: CreationOptional<number>;
+  issueId: number;
+  name: string;
+  accuracy: number;
+  profName: string;
+  icd: string;
+  icdName: string;
+  specialisationIds: string;
+  confirmed: boolean;
+}
+
+interface DiagnosesRequestModel
+  extends Model<
+    InferAttributes<DiagnosesRequestModel>,
+    InferCreationAttributes<DiagnosesRequestModel>
+  > {
+  id: CreationOptional<number>;
+  requestedOn: Date;
+  possibleDiagnoses?: DiagnosisModel[];
+  user?: UserModel;
+  userId: number;
+  birthyear: number;
+  gender: Genders;
+  symptomsIds: string; // Comma separated array - queryparam
+}
+
+export type { DiagnosesRequestModel, DiagnosisModel, UserModel };

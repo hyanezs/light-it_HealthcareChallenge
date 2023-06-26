@@ -7,6 +7,7 @@ import { type Route } from './types';
 const DiagnosesScreen = React.lazy(
   async () => import('./features/private/diagnoses/DiagnosesScreen')
 );
+const HistoryScreen = React.lazy(async () => import('./features/private/history/HistoryScreen'));
 
 // Public
 const AuthenticateScreen = React.lazy(
@@ -32,6 +33,11 @@ const routes: Route[] = [
   {
     path: '/diagnoses',
     element: lazyRender(<DiagnosesScreen />),
+    private: true,
+  },
+  {
+    path: '/history',
+    element: lazyRender(<HistoryScreen />),
     private: true,
   },
   {

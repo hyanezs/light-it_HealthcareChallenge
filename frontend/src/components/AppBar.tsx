@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Logo } from '../assets/images';
+import { SecondaryButton } from './Buttons';
 
 const AppBar = () => {
   const navigate = useNavigate();
@@ -14,7 +15,22 @@ const AppBar = () => {
     border border-white border-opacity-10 rounded-lg"
     >
       <Logo />
-
+      <div className="flex flex-row gap-10">
+        <SecondaryButton
+          onClick={() => {
+            navigate('/diagnoses');
+          }}
+        >
+          Diagnoses
+        </SecondaryButton>
+        <SecondaryButton
+          onClick={() => {
+            navigate('/history');
+          }}
+        >
+          History
+        </SecondaryButton>
+      </div>
       <div>
         <button
           onClick={() => {

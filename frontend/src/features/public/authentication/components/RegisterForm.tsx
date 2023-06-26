@@ -19,7 +19,7 @@ const RegisterForm = () => {
   const [togglePasswordVisibility, setTogglePasswordVisibility] = useState<
     Record<string, passwordType>
   >({
-    password: 'text',
+    password: 'password',
     confirmPassword: 'password',
   });
 
@@ -103,7 +103,7 @@ const RegisterForm = () => {
     setRegistering(false);
     if (response) {
       toast.success(response.success);
-      navigate('/dashboard');
+      navigate('/diagnoses');
     }
   };
 
@@ -129,6 +129,7 @@ const RegisterForm = () => {
                 }}
                 value={selectedGender}
               >
+                <option value={undefined}>Gender</option>
                 {input.options?.map((option: Option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}

@@ -1,12 +1,13 @@
 FROM node:18
 
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
+WORKDIR '/app'
 
-COPY package.json /usr/src/app/
+COPY package.json ./
+COPY yarn.lock ./
+
 RUN yarn install
-COPY . /usr/src/app
+COPY . .
 
-CMD [ "yarn", "start" ]
+EXPOSE 3000
 
-EXPOSE 5000
+CMD ["yarn", "start"]

@@ -1,4 +1,7 @@
+import defaultColors from 'tailwindcss/colors';
+
 export default {
+  ...defaultColors,
   brightYellow: '#EDFF1D',
   background: '#242424',
   backgroundDark: '#191919',

@@ -3,7 +3,7 @@ import { BadRequestError } from '../exceptions';
 import { Genders } from '../types';
 import { type GetDiagnosesParams } from '../types/requests';
 
-const validateGetDiagnosesParams = (params: GetDiagnosesParams) => {
+const validateGetPossibleDiagnosesParams = (params: GetDiagnosesParams) => {
   if (!params.symptomsIds) {
     throw new BadRequestError('queryParam: symptomsIds is required');
   }
@@ -47,4 +47,4 @@ const validateGetDiagnosesParams = (params: GetDiagnosesParams) => {
   }
 };
 
-export { validateGetDiagnosesParams };
+export { validateGetPossibleDiagnosesParams };

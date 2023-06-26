@@ -1,4 +1,4 @@
-import crypto from 'crypto';
+import crypto from 'node:crypto';
 import { cacheKeys, findInCache, setInCache } from '../../dataAccess/cache';
 import { logger } from '../../utils';
 import { authApiMedic, healthApiMedic } from './instances';

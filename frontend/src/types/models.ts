@@ -1,3 +1,5 @@
+import { type Genders } from './constants';
+
 type Me = {
   id: number;
   email: string;
@@ -32,4 +34,27 @@ type Diagnosis = {
   Specialisation: Specialisation[];
 };
 
-export type { Diagnosis, Issue, Me, Symptom };
+type PossibleDiagnosis = {
+  issueId: number;
+  name: string;
+  accuracy: number;
+  profName: string;
+  icd: string;
+  icdName: string;
+  specialisationIds: string;
+  confirmed: boolean;
+  id: number;
+};
+
+type DiagnosisRequest = {
+  id: number;
+  requestedOn: Date;
+  possibleDiagnoses: PossibleDiagnosis[];
+  user: Me;
+  userId: number;
+  birthyear: number;
+  gender: Genders;
+  symptomsIds: string;
+};
+
+export type { Diagnosis, DiagnosisRequest, Issue, Me, Symptom };
