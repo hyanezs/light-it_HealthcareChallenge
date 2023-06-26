@@ -32,4 +32,4 @@ type Diagnosis = {
   Specialisation: Specialisation[];
 };
 
-export type { Diagnosis, Me, Symptom };
+export type { Diagnosis, Issue, Me, Symptom };

@@ -1,9 +1,11 @@
+import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { type ReactNode } from 'react';
 import { Spinner } from '.';
 import { classNames } from '../utils';
 
 type ButtonProps = {
-  children: ReactNode;
+  children?: ReactNode;
   onClick?: () => void;
   className?: string;
   loading?: boolean;
@@ -42,4 +44,10 @@ const SecondaryButton = ({ children, onClick }: ButtonProps) => (
   </button>
 );
 
-export { PrimaryButton, SecondaryButton };
+const InfoButton = ({ onClick }: ButtonProps) => (
+  <button onClick={onClick}>
+    <FontAwesomeIcon icon={faInfoCircle} size="xl" />
+  </button>
+);
+
+export { InfoButton, PrimaryButton, SecondaryButton };
