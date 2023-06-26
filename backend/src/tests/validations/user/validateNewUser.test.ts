@@ -19,7 +19,7 @@ describe('validateNewUser', () => {
       email: 'test@example.com',
       password: 'Password123',
       birthdate: '02/12/2000',
-      gender: 'unknown',
+      gender: 'male',
     };
 
     mockedGetUserByCondition.mockResolvedValue(null);
@@ -35,7 +35,7 @@ describe('validateNewUser', () => {
       email: 'test@example.com',
       password: 'password123',
       birthdate: '02/12/2000',
-      gender: 'unknown',
+      gender: 'male',
     };
 
     const err = new BadRequestError('firstName is required.');
@@ -51,7 +51,7 @@ describe('validateNewUser', () => {
       email: 'test@example.com',
       password: 'Password123',
       birthdate: '02/12/2000',
-      gender: 'unknown',
+      gender: 'male',
     };
 
     mockedGetUserByCondition.mockResolvedValue(newUser);
