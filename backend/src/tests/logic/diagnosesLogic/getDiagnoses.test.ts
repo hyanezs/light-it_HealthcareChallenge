@@ -2,7 +2,10 @@ import MockAdapter from 'axios-mock-adapter';
 import { clearCachePreffix } from '../../../dataAccess/cache';
 import { BadRequestError, ServerError } from '../../../exceptions';
 import { authenticateApiMedic } from '../../../external/apiMedic/authenticate';
-import { healthApiMedic } from '../../../external/apiMedic/instances';
+import {
+  endpoints,
+  healthApiMedic,
+} from '../../../external/apiMedic/instances';
 import getDiagnoses from '../../../logic/diagnosesLogic';
 import { validateGetDiagnosesParams } from '../../../validations';
 
@@ -31,13 +34,13 @@ describe('getDiagnoses', () => {
 
   it('should return diagnoses from API if call is successful', async () => {
     const apiResponse = ['diagnosi1', 'diagnosi2'];
-    mockedApiMedic.onGet(`/diagnoses`).replyOnce(200, apiResponse);
+    mockedApiMedic.onGet(endpoints.diagnosis).replyOnce(200, apiResponse);
     mockedValidateGetDiagnosesParams.mockImplementation(() => {});
 
     const result = await getDiagnoses(params);
 
     expect(mockedApiMedic.history.get.length).toBe(1);
-    expect(mockedApiMedic.history.get[0].url).toBe('/diagnoses');
+    expect(mockedApiMedic.history.get[0].url).toBe(endpoints.diagnosis);
     expect(mockedApiMedic.history.get[0].params).toStrictEqual({
       year_of_birth: '1990',
       gender: 'male',
@@ -64,9 +67,9 @@ describe('getDiagnoses', () => {
     const apiResponse = ['diagnosi1', 'diagnosi2'];
 
     mockedApiMedic
-      .onGet('/diagnoses')
+      .onGet(endpoints.diagnosis)
       .replyOnce(400, 'Missing or invalid token')
-      .onGet('/diagnoses')
+      .onGet(endpoints.diagnosis)
       .replyOnce(200, apiResponse);
 
     mockedValidateGetDiagnosesParams.mockImplementation(() => {});
@@ -76,13 +79,13 @@ describe('getDiagnoses', () => {
     const result = await getDiagnoses(params);
 
     expect(mockedApiMedic.history.get.length).toBe(2);
-    expect(mockedApiMedic.history.get[0].url).toBe('/diagnoses');
+    expect(mockedApiMedic.history.get[0].url).toBe(endpoints.diagnosis);
     expect(mockedApiMedic.history.get[0].params).toStrictEqual({
       year_of_birth: '1990',
       gender: 'male',
       symptoms: '[1,2]',
     });
-    expect(mockedApiMedic.history.get[1].url).toBe('/diagnoses');
+    expect(mockedApiMedic.history.get[1].url).toBe(endpoints.diagnosis);
     expect(mockedApiMedic.history.get[1].params).toStrictEqual({
       year_of_birth: '1990',
       gender: 'male',
@@ -96,13 +99,15 @@ describe('getDiagnoses', () => {
   });
 
   it('should throw an error when the API call fails with an unknown error', async () => {
-    mockedApiMedic.onGet('/diagnoses').replyOnce(500, 'Some error message');
+    mockedApiMedic
+      .onGet(endpoints.diagnosis)
+      .replyOnce(500, 'Some error message');
     mockedValidateGetDiagnosesParams.mockResolvedValue(undefined);
 
     await expect(getDiagnoses(params)).rejects.toStrictEqual(
       new ServerError('Error getting diagnoses from API Medic'),
     );
     expect(mockedApiMedic.history.get.length).toBe(1);
-    expect(mockedApiMedic.history.get[0].url).toBe('/diagnoses');
+    expect(mockedApiMedic.history.get[0].url).toBe(endpoints.diagnosis);
   });
 });
