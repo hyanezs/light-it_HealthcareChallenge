@@ -7,7 +7,7 @@ import {
 } from '../dataAccess/cache';
 import { ServerError } from '../exceptions';
 import { authenticateApiMedic } from '../external/apiMedic/authenticate';
-import { healthApiMedic } from '../external/apiMedic/instances';
+import { endpoints, healthApiMedic } from '../external/apiMedic/instances';
 import { type Symptom } from '../types';
 import { logger } from '../utils';
 
@@ -19,7 +19,7 @@ const getSymptoms = async (): Promise<Symptom[] | undefined> => {
 
   try {
     logger.debug('Symptoms not found in cache, getting from API Medic');
-    const response = await healthApiMedic.get<Symptom[]>('/symptoms');
+    const response = await healthApiMedic.get<Symptom[]>(endpoints.symptoms);
     logger.debug('Saving symptoms from API Medic to cache - TTL 1 day');
     await setInCache(
       cacheKeys.apiMedicSymptoms,

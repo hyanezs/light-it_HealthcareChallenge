@@ -1,9 +1,9 @@
 import dayjs from 'dayjs';
 import { BadRequestError } from '../exceptions';
 import { Genders } from '../types';
-import { type GetDiagnosisParams } from '../types/requests';
+import { type GetDiagnosesParams } from '../types/requests';
 
-const validateGetDiagnosisParams = (params: GetDiagnosisParams) => {
+const validateGetDiagnosesParams = (params: GetDiagnosesParams) => {
   if (!params.symptomsIds) {
     throw new BadRequestError('queryParam: symptomsIds is required');
   }
@@ -47,4 +47,4 @@ const validateGetDiagnosisParams = (params: GetDiagnosisParams) => {
   }
 };
 
-export { validateGetDiagnosisParams };
+export { validateGetDiagnosesParams };

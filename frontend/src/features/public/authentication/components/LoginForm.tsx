@@ -27,7 +27,7 @@ const LoginForm = () => {
     const response = await login(formData as LoginRequest);
     if (response) {
       toast.success(response.success);
-      navigate('/diagnosis');
+      navigate('/diagnoses');
     }
 
     setLoggingIn(false);

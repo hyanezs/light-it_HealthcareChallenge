@@ -9,7 +9,7 @@ export const endpoints = {
   session: '/auth',
   me: '/me',
   symptoms: '/symptoms',
-  diagnosis: '/diagnosis',
+  diagnoses: '/diagnoses',
 };
 
 export const internalApi = axios.create({

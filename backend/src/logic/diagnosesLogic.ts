@@ -3,32 +3,32 @@ import axios, { type AxiosError } from 'axios';
 import { cacheKeys, clearCachePreffix } from '../dataAccess/cache';
 import { ServerError } from '../exceptions';
 import { authenticateApiMedic } from '../external/apiMedic/authenticate';
-import { healthApiMedic } from '../external/apiMedic/instances';
+import { endpoints, healthApiMedic } from '../external/apiMedic/instances';
 import {
   type Diagnosis,
-  type GetDiagnosisParams,
-} from '../types/external/diagnosis';
-import { validateGetDiagnosisParams } from '../validations';
+  type GetDiagnosesParams,
+} from '../types/external/diagnoses';
+import { validateGetDiagnosesParams } from '../validations';
 
-type GetDiagnosisApiMedicParams = {
+type GetDiagnosesApiMedicParams = {
   symptoms: string;
   gender: string;
   year_of_birth: string;
 };
 
-const getDiagnosis = async (
-  queryParams: GetDiagnosisParams,
+const getDiagnoses = async (
+  queryParams: GetDiagnosesParams,
 ): Promise<Diagnosis[] | undefined> => {
-  validateGetDiagnosisParams(queryParams);
+  validateGetDiagnosesParams(queryParams);
 
   try {
-    const params: GetDiagnosisApiMedicParams = {
+    const params: GetDiagnosesApiMedicParams = {
       symptoms: `[${queryParams.symptomsIds.join(',')}]`,
       gender: queryParams.gender?.toString().toLowerCase(),
       year_of_birth: queryParams.birthyear?.toString(),
     };
 
-    const response = await healthApiMedic.get<Diagnosis[]>('/diagnosis', {
+    const response = await healthApiMedic.get<Diagnosis[]>(endpoints.diagnosis, {
       params,
     });
     return response.data;
@@ -43,12 +43,12 @@ const getDiagnosis = async (
       ) {
         await clearCachePreffix(cacheKeys.apiMedicToken);
         await authenticateApiMedic(); // Implement token refresh logic
-        return getDiagnosis(queryParams); // Retry the API call
+        return getDiagnoses(queryParams); // Retry the API call
       }
     }
 
-    throw new ServerError('Error getting diagnosis from API Medic');
+    throw new ServerError('Error getting diagnoses from API Medic');
   }
 };
 
-export default getDiagnosis;
+export default getDiagnoses;

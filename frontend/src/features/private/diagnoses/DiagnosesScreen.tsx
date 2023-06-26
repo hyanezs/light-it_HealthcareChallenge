@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { HorizontalDivider } from '../../../components';
 import { type Diagnosis } from '../../../types';
-import RequestDiagnosisForm from './components/RequestDiagnosisForm';
-import './diagnosis.css';
+import DiagnosesView from './components/DiagnosesView';
+import RequestDiagnosesForm from './components/RequestDiagnosesForm';
+import './diagnoses.css';
 
-const DiagnosisScreen = () => {
-  const [diagnosis, setDiagnosis] = useState<Diagnosis[]>([]);
+const DiagnosesScreen = () => {
+  const [diagnoses, setDiagnoses] = useState<Diagnosis[]>([]);
 
   return (
     <div className="flex flex-col mx-10">
@@ -13,15 +14,12 @@ const DiagnosisScreen = () => {
         Symptoms Evaluation
       </span>
       <div className="flex flex-col lg:flex-row justify-between mt-20 gap-10 lg:gap-40">
-        <RequestDiagnosisForm setDiagnosis={setDiagnosis} />
+        <RequestDiagnosesForm setDiagnoses={setDiagnoses} />
         <HorizontalDivider id="mobile-divider" />
-        <div className="flex flex-col gap-10 w-full">
-          <p className="text-xl font-semibold">Diagnosis Results</p>
-          Dd H V
-        </div>
+        {diagnoses.length ? <DiagnosesView diagnoses={diagnoses} /> : <div className="w-full" />}
       </div>
     </div>
   );
 };
 
-export default DiagnosisScreen;
+export default DiagnosesScreen;

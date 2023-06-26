@@ -4,19 +4,19 @@ import { toast } from 'react-toastify';
 import { PrimaryButton, VirtualizedMultiSelect } from '../../../../components';
 import { type Diagnosis, type Option, type Symptom } from '../../../../types';
 import { Genders } from '../../../../types/constants';
-import { getDiagnosis, type GetDiagnosisParams } from '../api/get-diagnosis';
+import { getDiagnoses, type GetDiagnosesParams } from '../api/get-diagnoses';
 import getSymptoms from '../api/get-symptoms';
 
-type RequestDiagnosisFormProps = {
-  setDiagnosis: (diagnosis: Diagnosis[]) => void;
+type RequestDiagnosesFormProps = {
+  setDiagnoses: (diagnoses: Diagnosis[]) => void;
 };
 
-const RequestDiagnosisForm = ({ setDiagnosis }: RequestDiagnosisFormProps) => {
+const RequestDiagnosesForm = ({ setDiagnoses }: RequestDiagnosesFormProps) => {
   const [symptoms, setSymptoms] = useState<Symptom[]>([]);
   const [selectedSymptoms, setSelectedSymptoms] = useState<Option[]>([]);
   const [fetchingSymptoms, setFetchingSymptoms] = useState(false);
   const [isRequestingForExternal, setIsRequestingForExternal] = useState(false);
-  const [requestingDiagnosis, setRequestingDiagnosis] = useState(false);
+  const [requestingDiagnoses, setRequestingDiagnoses] = useState(false);
 
   const [nonPersonalInfo, setNonPersonalInfo] = useState({
     gender: 'gender',
@@ -36,15 +36,15 @@ const RequestDiagnosisForm = ({ setDiagnosis }: RequestDiagnosisFormProps) => {
     setFetchingSymptoms(false);
   };
 
-  const requestDiagnosis = async () => {
-    if (requestingDiagnosis) return;
+  const requestDiagnoses = async () => {
+    if (requestingDiagnoses) return;
 
     console.log({
       selectedSymptoms,
       nonPersonalInfo,
     });
 
-    let params: GetDiagnosisParams = {
+    let params: GetDiagnosesParams = {
       symptomsIds: selectedSymptoms.map((symptom) => symptom.value) as number[],
     };
 
@@ -70,17 +70,17 @@ const RequestDiagnosisForm = ({ setDiagnosis }: RequestDiagnosisFormProps) => {
       };
     }
 
-    setRequestingDiagnosis(true);
+    setRequestingDiagnoses(true);
 
-    const response = await getDiagnosis(params);
+    const response = await getDiagnoses(params);
     if (response) {
-      setDiagnosis(response.data);
-      toast.success('Diagnosis requested successfully');
+      setDiagnoses(response.data);
+      toast.success('Diagnoses requested successfully');
     } else {
-      setDiagnosis([]);
+      setDiagnoses([]);
     }
 
-    setRequestingDiagnosis(false);
+    setRequestingDiagnoses(false);
   };
 
   useEffect(() => {
@@ -111,6 +111,7 @@ const RequestDiagnosisForm = ({ setDiagnosis }: RequestDiagnosisFormProps) => {
 
   return (
     <div className="flex flex-col gap-10 w-full h-full">
+      <p className="text-2xl font-semibold ">How do you feel?</p>
       <p className="text-xl">Please select your current symptoms:</p>
       <VirtualizedMultiSelect
         options={symptoms.map((symptom) => ({ label: symptom.Name, value: symptom.ID }))}
@@ -171,11 +172,11 @@ const RequestDiagnosisForm = ({ setDiagnosis }: RequestDiagnosisFormProps) => {
         </section>
       )}
 
-      <PrimaryButton loading={requestingDiagnosis} onClick={requestDiagnosis}>
-        Request{requestingDiagnosis && 'ing'} Diagnosis{requestingDiagnosis && '...'}
+      <PrimaryButton loading={requestingDiagnoses} onClick={requestDiagnoses}>
+        Request{requestingDiagnoses && 'ing'} Diagnosis{requestingDiagnoses && '...'}
       </PrimaryButton>
     </div>
   );
 };
 
-export default RequestDiagnosisForm;
+export default RequestDiagnosesForm;

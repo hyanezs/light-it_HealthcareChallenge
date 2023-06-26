@@ -9,3 +9,10 @@ export const authApiMedic: AxiosInstance = axios.create({
 export const healthApiMedic: AxiosInstance = axios.create({
   baseURL: API_MEDIC_HEALTH_URL,
 });
+
+
+export const endpoints = {
+  authenticate: '/login',
+  diagnosis: '/diagnosis',
+  symptoms: '/symptoms',
+};

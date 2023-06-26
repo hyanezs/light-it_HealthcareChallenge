@@ -1,19 +1,19 @@
 import MockAdapter from 'axios-mock-adapter';
+import { clearCachePreffix } from '../../../dataAccess/cache';
 import { BadRequestError, ServerError } from '../../../exceptions';
 import { authenticateApiMedic } from '../../../external/apiMedic/authenticate';
 import { healthApiMedic } from '../../../external/apiMedic/instances';
-import getDiagnosis from '../../../logic/diagnosisLogic';
-import { validateGetDiagnosisParams } from '../../../validations';
-import { clearCachePreffix } from '../../../dataAccess/cache';
+import getDiagnoses from '../../../logic/diagnosesLogic';
+import { validateGetDiagnosesParams } from '../../../validations';
 
 jest.mock('../../../external/apiMedic/authenticate');
 jest.mock('../../../validations');
 jest.mock('../../../dataAccess/cache');
 
-describe('getDiagnosis', () => {
+describe('getDiagnoses', () => {
   const mockedAuthenticateApiMedic = authenticateApiMedic as jest.Mock;
-  const mockedValidateGetDiagnosisParams =
-    validateGetDiagnosisParams as jest.Mock;
+  const mockedValidateGetDiagnosesParams =
+    validateGetDiagnosesParams as jest.Mock;
   const mockedClearCachePreffix = clearCachePreffix as jest.Mock;
 
   let mockedApiMedic = new MockAdapter(healthApiMedic);
@@ -29,80 +29,80 @@ describe('getDiagnosis', () => {
     symptomsIds: ['1', '2'],
   };
 
-  it('should return diagnosis from API if call is successful', async () => {
+  it('should return diagnoses from API if call is successful', async () => {
     const apiResponse = ['diagnosi1', 'diagnosi2'];
-    mockedApiMedic.onGet(`/diagnosis`).replyOnce(200, apiResponse);
-    mockedValidateGetDiagnosisParams.mockImplementation(() => {});
+    mockedApiMedic.onGet(`/diagnoses`).replyOnce(200, apiResponse);
+    mockedValidateGetDiagnosesParams.mockImplementation(() => {});
 
-    const result = await getDiagnosis(params);
+    const result = await getDiagnoses(params);
 
     expect(mockedApiMedic.history.get.length).toBe(1);
-    expect(mockedApiMedic.history.get[0].url).toBe('/diagnosis');
+    expect(mockedApiMedic.history.get[0].url).toBe('/diagnoses');
     expect(mockedApiMedic.history.get[0].params).toStrictEqual({
       year_of_birth: '1990',
       gender: 'male',
       symptoms: '[1,2]',
     });
-    expect(mockedValidateGetDiagnosisParams).toHaveBeenCalledTimes(1);
+    expect(mockedValidateGetDiagnosesParams).toHaveBeenCalledTimes(1);
     expect(result).toEqual(['diagnosi1', 'diagnosi2']);
   });
 
   it('should throw error if validation fails', async () => {
-    mockedValidateGetDiagnosisParams.mockImplementation(() => {
+    mockedValidateGetDiagnosesParams.mockImplementation(() => {
       throw new BadRequestError('Some validation error');
     });
 
-    await expect(getDiagnosis(params)).rejects.toThrow(
+    await expect(getDiagnoses(params)).rejects.toThrow(
       new BadRequestError('Some validation error'),
     );
     expect(mockedApiMedic.history.get.length).toBe(0);
     expect(authenticateApiMedic).toHaveBeenCalledTimes(0);
-    expect(mockedValidateGetDiagnosisParams).toHaveBeenCalledTimes(1);
+    expect(mockedValidateGetDiagnosesParams).toHaveBeenCalledTimes(1);
   });
 
   it('should retry API call if token was invalid', async () => {
     const apiResponse = ['diagnosi1', 'diagnosi2'];
 
     mockedApiMedic
-      .onGet('/diagnosis')
+      .onGet('/diagnoses')
       .replyOnce(400, 'Missing or invalid token')
-      .onGet('/diagnosis')
+      .onGet('/diagnoses')
       .replyOnce(200, apiResponse);
 
-    mockedValidateGetDiagnosisParams.mockImplementation(() => {});
+    mockedValidateGetDiagnosesParams.mockImplementation(() => {});
     mockedAuthenticateApiMedic.mockImplementation(() => {});
     mockedClearCachePreffix.mockImplementation(() => {});
 
-    const result = await getDiagnosis(params);
+    const result = await getDiagnoses(params);
 
     expect(mockedApiMedic.history.get.length).toBe(2);
-    expect(mockedApiMedic.history.get[0].url).toBe('/diagnosis');
+    expect(mockedApiMedic.history.get[0].url).toBe('/diagnoses');
     expect(mockedApiMedic.history.get[0].params).toStrictEqual({
       year_of_birth: '1990',
       gender: 'male',
       symptoms: '[1,2]',
     });
-    expect(mockedApiMedic.history.get[1].url).toBe('/diagnosis');
+    expect(mockedApiMedic.history.get[1].url).toBe('/diagnoses');
     expect(mockedApiMedic.history.get[1].params).toStrictEqual({
       year_of_birth: '1990',
       gender: 'male',
       symptoms: '[1,2]',
     });
 
-    expect(mockedValidateGetDiagnosisParams).toHaveBeenCalledTimes(2);
+    expect(mockedValidateGetDiagnosesParams).toHaveBeenCalledTimes(2);
     expect(authenticateApiMedic).toHaveBeenCalledTimes(1);
     expect(clearCachePreffix).toHaveBeenCalledTimes(1);
     expect(result).toEqual(['diagnosi1', 'diagnosi2']);
   });
 
   it('should throw an error when the API call fails with an unknown error', async () => {
-    mockedApiMedic.onGet('/diagnosis').replyOnce(500, 'Some error message');
-    mockedValidateGetDiagnosisParams.mockResolvedValue(undefined);
+    mockedApiMedic.onGet('/diagnoses').replyOnce(500, 'Some error message');
+    mockedValidateGetDiagnosesParams.mockResolvedValue(undefined);
 
-    await expect(getDiagnosis(params)).rejects.toStrictEqual(
-      new ServerError('Error getting diagnosis from API Medic'),
+    await expect(getDiagnoses(params)).rejects.toStrictEqual(
+      new ServerError('Error getting diagnoses from API Medic'),
     );
     expect(mockedApiMedic.history.get.length).toBe(1);
-    expect(mockedApiMedic.history.get[0].url).toBe('/diagnosis');
+    expect(mockedApiMedic.history.get[0].url).toBe('/diagnoses');
   });
 });
