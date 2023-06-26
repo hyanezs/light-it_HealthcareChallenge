@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { Router, type NextFunction, type Response } from 'express';
 import getDiagnosis from '../../logic/diagnosisLogic';
 import { auth } from '../../middlewares';
@@ -20,7 +21,7 @@ diagnosisController.get(
 
       if (!params.gender) params.gender = Genders[user!.gender].toLowerCase();
       if (!params.birthyear)
-        params.birthyear = user!.birthdate.year().toString();
+        params.birthyear = dayjs(user!.birthdate).year().toString();
 
       const diagnosis = await getDiagnosis(params);
 

@@ -1,9 +1,7 @@
-import dayjs from 'dayjs';
 import { type NextFunction, type Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { getUserById } from '../dataAccess/repositories';
 import { UnauthorizedError } from '../exceptions';
-import { Genders } from '../types';
 import { type UserModel } from '../types/models';
 import { type RequestWithUser } from './../types/requests';
 
@@ -21,8 +19,8 @@ const auth =
         firstName: 'Carly',
         lastName: 'Doe',
         email: '  ',
-        gender: Genders.FEMALE,
-        birthdate: dayjs('1990-01-01'),
+        gender: 2,
+        birthdate: '1990-01-01',
       } as unknown as UserModel;
       next();
       return;
@@ -47,13 +45,13 @@ const auth =
         return;
       }
 
-      const exists = await getUserById(decodedUser?.id);
-      if (!exists) {
+      const userInDb = await getUserById(decodedUser?.id);
+      if (!userInDb) {
         next(new UnauthorizedError());
         return;
       }
 
-      req.user = decodedUser;
+      req.user = userInDb;
       next();
     } catch (ex: any) {
       if (ex.name === 'TokenExpiredError') {
