@@ -8,6 +8,7 @@ import {
   type Diagnosis,
   type GetDiagnosesParams,
 } from '../types/external/diagnoses';
+import { logger } from '../utils';
 import { validateGetDiagnosesParams } from '../validations';
 
 type GetDiagnosesApiMedicParams = {
@@ -28,9 +29,14 @@ const getDiagnoses = async (
       year_of_birth: queryParams.birthyear?.toString(),
     };
 
-    const response = await healthApiMedic.get<Diagnosis[]>(endpoints.diagnosis, {
-      params,
-    });
+    logger.debug(JSON.stringify({ GetDiagnosis: params }));
+
+    const response = await healthApiMedic.get<Diagnosis[]>(
+      endpoints.diagnosis,
+      {
+        params,
+      },
+    );
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
