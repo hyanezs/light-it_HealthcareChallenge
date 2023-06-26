@@ -1,15 +1,9 @@
-type Me = {
-  id: number;
-  email: string;
-  firstName: string;
-  lastName: string;
-  birthdate: string;
-  gender: string;
-};
+import { type Genders } from '../constants';
 
-type Symptom = {
-  ID: number;
-  Name: string;
+type GetDiagnosisParams = {
+  symptomsIds: number[];
+  gender: Genders;
+  birthyear: number;
 };
 
 type Issue = {
@@ -32,4 +26,4 @@ type Diagnosis = {
   Specialisation: Specialisation[];
 };
 
-export type { Diagnosis, Me, Symptom };
+export type { Diagnosis, GetDiagnosisParams };

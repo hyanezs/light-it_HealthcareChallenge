@@ -65,7 +65,6 @@ const VirtualizedMultiSelect = ({
         color: '#fff',
       }),
     }}
-    closeMenuOnSelect={false}
   />
 );
 export default VirtualizedMultiSelect;
