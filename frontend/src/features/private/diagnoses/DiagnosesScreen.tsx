@@ -7,6 +7,12 @@ import './diagnoses.css';
 
 const DiagnosesScreen = () => {
   const [diagnoses, setDiagnoses] = useState<Diagnosis[]>([]);
+  const [showResults, setShowResults] = useState(false);
+
+  const handleDiagnosesChange = (diagnoses: Diagnosis[]) => {
+    setDiagnoses(diagnoses);
+    setShowResults(true);
+  };
 
   return (
     <div className="flex flex-col mx-10">
@@ -14,9 +20,9 @@ const DiagnosesScreen = () => {
         Symptoms Evaluation
       </span>
       <div className="flex flex-col lg:flex-row justify-between mt-20 gap-10 lg:gap-40">
-        <RequestDiagnosesForm setDiagnoses={setDiagnoses} />
+        <RequestDiagnosesForm setDiagnoses={handleDiagnosesChange} />
         <HorizontalDivider id="mobile-divider" />
-        {diagnoses.length ? <DiagnosesView diagnoses={diagnoses} /> : <div className="w-full" />}
+        {showResults ? <DiagnosesView diagnoses={diagnoses} /> : <div className="w-full" />}
       </div>
     </div>
   );

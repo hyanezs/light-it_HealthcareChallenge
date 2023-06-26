@@ -20,26 +20,22 @@ const DiagnosesView = ({ diagnoses }: DiagnosesViewProps) => {
 
   const issueInfoFields = ['Icd', 'IcdName', 'Accuracy', 'ProfName', 'Specialisations'];
 
-  const modalTitle = <p>{selectedDiagnosisInfo?.Issue?.Name}</p>;
+  const modalTitle = <p>Diagnosis: {selectedDiagnosisInfo?.Issue?.Name}</p>;
 
   const modalBody = (
-    <div className="flex flex-row gap-10 w-full">
-      <div className="flex flex-col items-start">
+    <table className="table-auto">
+      <tbody>
         {issueInfoFields.map((field) => (
-          <span className="font-bold" key={field}>
-            {field}:
-          </span>
+          <tr key={field} className="text-left">
+            <td className="font-bold p-2 align-top">{field}:</td>
+            <td className="row-content py-2 px-6">
+              {selectedDiagnosisInfo?.Issue[field as keyof Issue] ??
+                selectedDiagnosisInfo?.Specialisation.map((s) => s.Name).join(', ')}
+            </td>
+          </tr>
         ))}
-      </div>
-      <div className="flex flex-col items-start">
-        {issueInfoFields.map((field) => (
-          <span key={field}>
-            {selectedDiagnosisInfo?.Issue[field as keyof Issue] ??
-              selectedDiagnosisInfo?.Specialisation.map((s) => s.Name).join(', ')}
-          </span>
-        ))}
-      </div>
-    </div>
+      </tbody>
+    </table>
   );
 
   return (
@@ -61,6 +57,7 @@ const DiagnosesView = ({ diagnoses }: DiagnosesViewProps) => {
             {index !== diagnoses.length - 1 && <HorizontalDivider />}
           </section>
         ))}
+      {diagnoses.length === 0 && <p className="text-xl font-semibold">No results found.</p>}
     </div>
   );
 };

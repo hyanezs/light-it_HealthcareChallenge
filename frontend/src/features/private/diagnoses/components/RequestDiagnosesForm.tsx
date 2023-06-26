@@ -75,7 +75,7 @@ const RequestDiagnosesForm = ({ setDiagnoses }: RequestDiagnosesFormProps) => {
     const response = await getDiagnoses(params);
     if (response) {
       setDiagnoses(response.data);
-      toast.success('Diagnoses requested successfully');
+      toast.success('Diagnosis requested successfully');
     } else {
       setDiagnoses([]);
     }
