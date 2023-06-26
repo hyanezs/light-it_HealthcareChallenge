@@ -1,16 +1,14 @@
-import { type Genders } from '../constants';
-
 type GetDiagnosisParams = {
-  symptomsIds: number[];
-  gender: Genders;
-  birthyear: number;
+  symptomsIds: string[];
+  gender: string;
+  birthyear: string;
 };
 
 type Issue = {
   ID: number;
   Name: string;
   Accuracy: number;
-  ProofName: string;
+  ProfName: string;
   Icd: string;
   IcdName: string;
 };

@@ -41,6 +41,5 @@ describe('GET /symptoms', () => {
 
     expect(response.status).toBe(500);
     expect(response.body).toEqual({ error: errorMessage });
-    // Add additional assertions as needed
   });
 });

@@ -1,3 +1,4 @@
-import { validateLogin, validateNewUser } from './user';
+import { validateGetDiagnosisParams } from './diagnosis';
+import { validateNewUser } from './user';
 
-export { validateLogin, validateNewUser };
+export { validateGetDiagnosisParams, validateNewUser };

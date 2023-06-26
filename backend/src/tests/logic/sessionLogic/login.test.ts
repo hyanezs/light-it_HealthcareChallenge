@@ -1,10 +1,10 @@
-import { getUserByCondition } from '../../../dataAccess/repositories';
+import { getUserByCondition } from '../../../dataAccess/repositories/userRepository';
 import { BadRequestError } from '../../../exceptions';
 import { login } from '../../../logic/sessionLogic';
 import { generateJwtToken, validateHashedString } from '../../../utils';
 
 jest.mock('../../../utils');
-jest.mock('../../../dataAccess/repositories');
+jest.mock('../../../dataAccess/repositories/userRepository');
 
 describe('login', () => {
   const mockedGenerateJwtToken = generateJwtToken as jest.Mock;
@@ -63,5 +63,43 @@ describe('login', () => {
     expect(generateJwtToken).not.toHaveBeenCalled();
     expect(getUserByCondition).not.toHaveBeenCalled();
     expect(validateHashedString).not.toHaveBeenCalled();
+  });
+
+  it('should throw generic BadRequestError for incorrect email', async () => {
+    const email = 'test@example.com';
+    const password = 'password123';
+    const userInDb = null;
+
+    mockedGetUserByCondition.mockResolvedValue(userInDb);
+
+    await expect(login(email, password)).rejects.toThrow(
+      new BadRequestError('Incorrect Email or Password. Please try again.'),
+    );
+    expect(getUserByCondition).toHaveBeenCalledWith({ email });
+    expect(validateHashedString).not.toHaveBeenCalled();
+  });
+
+  it('should throw generic BadRequestError for incorrect password', async () => {
+    const email = 'test@example.com';
+    const password = 'password123';
+    const userInDb = {
+      email,
+      firstName: 'John',
+      lastName: 'Doe',
+      id: 1,
+      password: 'someHashedPassword',
+    };
+
+    mockedGetUserByCondition.mockResolvedValue(userInDb);
+    mockedValidateHashedString.mockResolvedValue(false);
+
+    await expect(login(email, password)).rejects.toThrow(
+      new BadRequestError('Incorrect Email or Password. Please try again.'),
+    );
+    expect(getUserByCondition).toHaveBeenCalledWith({ email });
+    expect(validateHashedString).toHaveBeenCalledWith(
+      password,
+      userInDb.password,
+    );
   });
 });

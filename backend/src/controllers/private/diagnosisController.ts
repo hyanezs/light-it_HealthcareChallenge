@@ -1,7 +1,7 @@
 import { Router, type NextFunction, type Response } from 'express';
 import getDiagnosis from '../../logic/diagnosisLogic';
 import { auth } from '../../middlewares';
-import { StatusCodes } from '../../types';
+import { Genders, StatusCodes } from '../../types';
 import {
   type GetDiagnosisParams,
   type RequestWithUser,
@@ -18,12 +18,15 @@ diagnosisController.get(
       const params = req.query as unknown as GetDiagnosisParams;
       const { user } = req;
 
-      if (!params.gender) params.gender = user!.gender;
-      if (!params.birthyear) params.birthyear = user!.birthdate.year();
+      if (!params.gender) params.gender = Genders[user!.gender].toLowerCase();
+      if (!params.birthyear)
+        params.birthyear = user!.birthdate.year().toString();
 
       const diagnosis = await getDiagnosis(params);
 
-      res.status(StatusCodes.OK).send();
+      res.status(StatusCodes.OK).send({
+        data: diagnosis,
+      });
     } catch (e: any) {
       next(e);
     }

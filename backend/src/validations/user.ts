@@ -3,9 +3,7 @@ import emailValidator from 'email-validator';
 import { getUserByCondition } from '../dataAccess/repositories';
 import { BadRequestError, ConflictError } from '../exceptions';
 import { Genders } from '../types/constants';
-import { type UserModel } from '../types/models';
 import { type RegisterUser } from '../types/requests';
-import { validateHashedString } from '../utils';
 
 const validatePassword = (password: string): void => {
   if (!password) {
@@ -72,28 +70,6 @@ const validateUserAttributes = (user: RegisterUser): void => {
   validatePassword(password);
 };
 
-const validateLogin = async (
-  email: string,
-  password: string,
-): Promise<UserModel> => {
-  const userInDb = await getUserByCondition({ email });
-
-  if (!userInDb) {
-    throw new BadRequestError(`Incorrect Email or Password. Please try again.`);
-  }
-
-  const isPasswordValid = await validateHashedString(
-    password,
-    userInDb.password,
-  );
-
-  if (!isPasswordValid) {
-    throw new BadRequestError(`Incorrect Email or Password. Please try again.`);
-  }
-
-  return userInDb;
-};
-
 const validateUserDoesNotExist = async (email: string) => {
   const existsUserWithEmail = await getUserByCondition({ email });
   if (existsUserWithEmail) {
@@ -106,4 +82,4 @@ const validateNewUser = async (newUser: RegisterUser): Promise<void> => {
   await validateUserDoesNotExist(newUser.email);
 };
 
-export { validateLogin, validateNewUser };
+export { validateNewUser };

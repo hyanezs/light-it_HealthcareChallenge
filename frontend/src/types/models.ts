@@ -16,7 +16,7 @@ type Issue = {
   ID: number;
   Name: string;
   Accuracy: number;
-  ProofName: string;
+  ProfName: string;
   Icd: string;
   IcdName: string;
 };

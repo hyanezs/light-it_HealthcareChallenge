@@ -8,7 +8,7 @@ import {
   type GetDiagnosisParams,
 } from '../types/external/diagnosis';
 import { logger } from '../utils';
-import { getSymptoms } from './symptomsLogic';
+import { validateGetDiagnosisParams } from '../validations';
 
 type GetDiagnosisApiMedicParams = {
   symptoms: string;
@@ -16,10 +16,14 @@ type GetDiagnosisApiMedicParams = {
   year_of_birth: string;
 };
 
-const getDiagnosis = async (queryParams: GetDiagnosisParams) => {
+const getDiagnosis = async (
+  queryParams: GetDiagnosisParams,
+): Promise<Diagnosis[] | undefined> => {
+  validateGetDiagnosisParams(queryParams);
+
   try {
     const params: GetDiagnosisApiMedicParams = {
-      symptoms: queryParams.symptomsIds.join(','),
+      symptoms: `[${queryParams.symptomsIds.join(',')}]`,
       gender: queryParams.gender?.toString().toLowerCase(),
       year_of_birth: queryParams.birthyear?.toString(),
     };
@@ -36,12 +40,12 @@ const getDiagnosis = async (queryParams: GetDiagnosisParams) => {
         axiosError.response.data === 'Missing or invalid token'
       ) {
         await authenticateApiMedic(); // Implement token refresh logic
-        return getSymptoms(); // Retry the API call
+        return getDiagnosis(queryParams); // Retry the API call
       }
     }
 
     logger.error({ error });
-    throw new ServerError('Error getting symptoms from API Medic');
+    throw new ServerError('Error getting diagnosis from API Medic');
   }
 };
 

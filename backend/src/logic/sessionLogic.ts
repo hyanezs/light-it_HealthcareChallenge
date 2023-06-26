@@ -1,16 +1,34 @@
 import { persistUser } from '../dataAccess/repositories';
-import { type PersistUser } from '../dataAccess/repositories/userRepository';
+import {
+  getUserByCondition,
+  type PersistUser,
+} from '../dataAccess/repositories/userRepository';
 import { BadRequestError } from '../exceptions';
 import { type RegisterUser } from '../types/requests';
-import { generateJwtToken, transformUserForm } from '../utils';
-import { validateLogin, validateNewUser } from '../validations';
+import {
+  generateJwtToken,
+  transformUserForm,
+  validateHashedString,
+} from '../utils';
+import { validateNewUser } from '../validations';
 
 const login = async (email: string, password: string): Promise<string> => {
   if (!email || !password) {
     throw new BadRequestError('credentials (email & password) are required.');
   }
 
-  const userInDb = await validateLogin(email, password);
+  const userInDb = await getUserByCondition({ email });
+  if (!userInDb) {
+    throw new BadRequestError(`Incorrect Email or Password. Please try again.`);
+  }
+
+  const isPasswordValid = await validateHashedString(
+    password,
+    userInDb.password,
+  );
+  if (!isPasswordValid) {
+    throw new BadRequestError(`Incorrect Email or Password. Please try again.`);
+  }
 
   return generateJwtToken({
     email: userInDb.email,

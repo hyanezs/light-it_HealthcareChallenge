@@ -1,7 +1,9 @@
+import dayjs from 'dayjs';
 import { type NextFunction, type Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { getUserById } from '../dataAccess/repositories';
 import { UnauthorizedError } from '../exceptions';
+import { Genders } from '../types';
 import { type UserModel } from '../types/models';
 import { type RequestWithUser } from './../types/requests';
 
@@ -16,9 +18,11 @@ const auth =
     if (process.env.NODE_ENV === 'test') {
       req.user = {
         id: 1,
-        firstName: 'John',
+        firstName: 'Carly',
         lastName: 'Doe',
         email: '  ',
+        gender: Genders.FEMALE,
+        birthdate: dayjs('1990-01-01'),
       } as unknown as UserModel;
       next();
       return;
