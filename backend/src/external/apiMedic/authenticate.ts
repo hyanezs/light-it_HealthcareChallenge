@@ -6,6 +6,8 @@ import { authApiMedic, healthApiMedic } from './instances';
 const { API_MEDIC_AUTH_URL, API_MEDIC_USERNAME, API_MEDIC_PASSWORD } =
   process.env;
 
+let interceptorId = -1;
+
 const encryptPassword = (password: string) => {
   const hmac = crypto.createHmac('md5', password);
   hmac.update(`${API_MEDIC_AUTH_URL!}/login`);
@@ -57,8 +59,13 @@ const authenticateApiMedic = async () => {
     token = await acquireToken();
   }
 
+  // Eject the previous interceptor if it exists
+  if (interceptorId >= 0) {
+    healthApiMedic.interceptors.request.eject(interceptorId);
+  }
+
   // Default token and language for api communication
-  healthApiMedic.interceptors.request.use((config) => {
+  interceptorId = healthApiMedic.interceptors.request.use((config) => {
     config.params = (config.params || {}) as Record<string, any>;
     config.params.token = token;
     config.params.language = 'en-gb';

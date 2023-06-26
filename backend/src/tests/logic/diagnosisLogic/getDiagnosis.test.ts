@@ -4,14 +4,18 @@ import { authenticateApiMedic } from '../../../external/apiMedic/authenticate';
 import { healthApiMedic } from '../../../external/apiMedic/instances';
 import getDiagnosis from '../../../logic/diagnosisLogic';
 import { validateGetDiagnosisParams } from '../../../validations';
+import { clearCachePreffix } from '../../../dataAccess/cache';
 
 jest.mock('../../../external/apiMedic/authenticate');
 jest.mock('../../../validations');
+jest.mock('../../../dataAccess/cache');
 
 describe('getDiagnosis', () => {
   const mockedAuthenticateApiMedic = authenticateApiMedic as jest.Mock;
   const mockedValidateGetDiagnosisParams =
     validateGetDiagnosisParams as jest.Mock;
+  const mockedClearCachePreffix = clearCachePreffix as jest.Mock;
+
   let mockedApiMedic = new MockAdapter(healthApiMedic);
 
   afterEach(() => {
@@ -67,6 +71,7 @@ describe('getDiagnosis', () => {
 
     mockedValidateGetDiagnosisParams.mockImplementation(() => {});
     mockedAuthenticateApiMedic.mockImplementation(() => {});
+    mockedClearCachePreffix.mockImplementation(() => {});
 
     const result = await getDiagnosis(params);
 
@@ -86,6 +91,7 @@ describe('getDiagnosis', () => {
 
     expect(mockedValidateGetDiagnosisParams).toHaveBeenCalledTimes(2);
     expect(authenticateApiMedic).toHaveBeenCalledTimes(1);
+    expect(clearCachePreffix).toHaveBeenCalledTimes(1);
     expect(result).toEqual(['diagnosi1', 'diagnosi2']);
   });
 

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import axios, { type AxiosError } from 'axios';
+import { cacheKeys, clearCachePreffix } from '../dataAccess/cache';
 import { ServerError } from '../exceptions';
 import { authenticateApiMedic } from '../external/apiMedic/authenticate';
 import { healthApiMedic } from '../external/apiMedic/instances';
@@ -7,7 +8,6 @@ import {
   type Diagnosis,
   type GetDiagnosisParams,
 } from '../types/external/diagnosis';
-import { logger } from '../utils';
 import { validateGetDiagnosisParams } from '../validations';
 
 type GetDiagnosisApiMedicParams = {
@@ -37,14 +37,16 @@ const getDiagnosis = async (
       const axiosError: AxiosError = error;
       if (
         axiosError.response?.status === 400 &&
-        axiosError.response.data === 'Missing or invalid token'
+        (axiosError.response?.data as string)
+          .toLowerCase()
+          .includes('invalid token')
       ) {
+        await clearCachePreffix(cacheKeys.apiMedicToken);
         await authenticateApiMedic(); // Implement token refresh logic
         return getDiagnosis(queryParams); // Retry the API call
       }
     }
 
-    logger.error({ error });
     throw new ServerError('Error getting diagnosis from API Medic');
   }
 };

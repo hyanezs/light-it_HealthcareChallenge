@@ -25,7 +25,8 @@ export const handleApiError = (error: AxiosError) => {
     error: string;
   };
   const message =
-    data.error ??
+    data?.error ??
+    error.message ??
     'Something went wrong on our side. Please try again later, or let us know if this issue persists.';
 
   console.error(error);
