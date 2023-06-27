@@ -1,0 +1,20 @@
+version: '3.8'
+name: healthcare_frontend
+services:
+  frontend:
+    container_name: healthcare_frontend
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    environment:
+      - REACT_APP_API_URL=http://localhost:5000
+    ports:
+      - '3000:3000'
+
+networks:
+  healthcare:
+    name: healthcare
+
+volumes:
+  db:
+    driver: local
