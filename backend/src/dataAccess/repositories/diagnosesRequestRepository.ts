@@ -22,7 +22,7 @@ const getDiagnosesRequestsByCondition = async <
       all: true,
     },
   ],
-): Promise<DiagnosesRequestModel[] | null> =>
+): Promise<DiagnosesRequestModel[]> =>
   DiagnosesRequest.findAll({
     where,
     include,

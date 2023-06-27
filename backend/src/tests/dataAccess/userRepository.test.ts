@@ -68,37 +68,6 @@ describe('getUserByCondition', () => {
     });
   });
 
-  it('should retrieve a user by condition with included associations', async () => {
-    // TODO: Fix this test
-    /* const condition = {
-      email: 'john@example.com',
-    };
-
-    const includedAssociations = ['diagnoses'];
-
-    const retrievedUser = {
-      id: 1,
-      name: 'John Doe',
-      email: 'john@example.com',
-      diagnoses: [
-        {
-          id: 1,
-          name: 'Diabetes',
-        },
-      ],
-    };
-
-    // mockedUser.findOne.mockResolvedValue(retrievedUser as UserModel);
-
-    const result = await getUserByCondition(condition, includedAssociations);
-
-    expect(result).toBe(retrievedUser);
-    expect(User.findOne).toHaveBeenCalledWith({
-      where: condition,
-      include: includedAssociations,
-    }); */
-  });
-
   it('should return null when no user is found by condition', async () => {
     const condition = {
       email: 'john@example.com',

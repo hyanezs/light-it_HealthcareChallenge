@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import { Router, type NextFunction, type Response } from 'express';
 import {
   editDiagnosis,
-  getDiagnosisRequest,
+  getDiagnosesRequest,
   getPossibleDiagnoses,
   getUsersDiagnosesHistory,
 } from '../../logic/diagnosesLogic';
@@ -68,7 +68,7 @@ diagnosesController.get(
       const id = parseInt(req.params.id, 10);
       const { user } = req;
 
-      const diagnosis = await getDiagnosisRequest(id, user!);
+      const diagnosis = await getDiagnosesRequest(id, user!);
 
       res.status(StatusCodes.OK).send({
         data: diagnosis,

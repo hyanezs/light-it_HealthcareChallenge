@@ -1,11 +1,19 @@
 import request from 'supertest';
-import { getPossibleDiagnoses } from '../../logic/diagnosesLogic';
+import {
+  getDiagnosesRequest,
+  getPossibleDiagnoses,
+  getUsersDiagnosesHistory,
+} from '../../logic/diagnosesLogic';
 import { app } from '../../server';
+import { Genders } from '../../types';
 import { Diagnosis } from '../../types/external/external-diagnosis';
 
 jest.mock('../../logic/diagnosesLogic');
 
-describe('GET /diagnoses', () => {
+const date = new Date();
+const stringifiedDate = date.toISOString();
+
+describe('POST /diagnoses', () => {
   const mockedGetPossibleDiagnoses = getPossibleDiagnoses as jest.Mock;
 
   afterEach(() => {
@@ -50,8 +58,8 @@ describe('GET /diagnoses', () => {
     mockedGetPossibleDiagnoses.mockResolvedValue(mockedDiagnoses);
 
     const response = await request(app)
-      .get('/diagnoses')
-      .query({
+      .post('/diagnoses')
+      .send({
         symptomsIds: ['1', '2'],
         gender: 'male',
         birthyear: '2000',
@@ -98,8 +106,8 @@ describe('GET /diagnoses', () => {
     mockedGetPossibleDiagnoses.mockResolvedValue(mockedDiagnoses);
 
     const response = await request(app)
-      .get('/diagnoses')
-      .query({
+      .post('/diagnoses')
+      .send({
         symptomsIds: ['1', '2'],
       });
 
@@ -119,6 +127,108 @@ describe('GET /diagnoses', () => {
     const errorMessage = 'An error occurred';
 
     mockedGetPossibleDiagnoses.mockRejectedValue(new Error(errorMessage));
+
+    const response = await request(app).post('/diagnoses');
+
+    expect(response.status).toBe(500);
+    expect(response.body).toEqual({ error: errorMessage });
+  });
+});
+
+describe('GET /diagnoses', () => {
+  const mockedGetUsersDiagnosesHistory = getUsersDiagnosesHistory as jest.Mock;
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  const user = {
+    birthdate: '1990-01-01',
+    email: '  ',
+    firstName: 'Carly',
+    gender: 2,
+    id: 1,
+    lastName: 'Doe',
+  };
+
+  it('should return a valid response with history', async () => {
+    const mockedUsersHistory = [
+      {
+        symptomsIds: '1,2',
+        birthyear: 2000,
+        gender: Genders.FEMALE,
+        id: 1,
+        requestedOn: date,
+        possibleDiagnoses: [],
+        userId: 1,
+      },
+    ];
+
+    mockedGetUsersDiagnosesHistory.mockResolvedValue(mockedUsersHistory);
+
+    const response = await request(app).get('/diagnoses');
+
+    mockedUsersHistory[0].requestedOn = stringifiedDate as unknown as Date;
+
+    expect(response.status).toBe(200);
+    expect(mockedGetUsersDiagnosesHistory).toHaveBeenCalledWith(user);
+    expect(response.body).toEqual({ data: mockedUsersHistory });
+  });
+
+  it('should handle errors and return an error response', async () => {
+    const errorMessage = 'An error occurred';
+
+    mockedGetUsersDiagnosesHistory.mockRejectedValue(new Error(errorMessage));
+
+    const response = await request(app).get('/diagnoses');
+
+    expect(response.status).toBe(500);
+    expect(response.body).toEqual({ error: errorMessage });
+  });
+});
+
+describe('GET /diagnoses/1', () => {
+  const mockedGetDiagnosisRequest = getDiagnosesRequest as jest.Mock;
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  const user = {
+    birthdate: '1990-01-01',
+    email: '  ',
+    firstName: 'Carly',
+    gender: 2,
+    id: 1,
+    lastName: 'Doe',
+  };
+
+  it('should return a valid response with history', async () => {
+    const mockedDiagnosisRequest = {
+      symptomsIds: '1,2',
+      birthyear: 2000,
+      gender: Genders.FEMALE,
+      id: 1,
+      requestedOn: date,
+      possibleDiagnoses: [],
+      userId: 1,
+    };
+
+    mockedGetDiagnosisRequest.mockResolvedValue(mockedDiagnosisRequest);
+
+    const response = await request(app).get('/diagnoses/1');
+
+    mockedDiagnosisRequest.requestedOn = stringifiedDate as unknown as Date;
+
+    expect(response.status).toBe(200);
+    expect(mockedGetDiagnosisRequest).toHaveBeenCalledWith(1, user);
+    expect(response.body).toEqual({ data: mockedDiagnosisRequest });
+  });
+
+  it('should handle errors and return an error response', async () => {
+    const errorMessage = 'An error occurred';
+
+    mockedGetDiagnosisRequest.mockRejectedValue(new Error(errorMessage));
 
     const response = await request(app).get('/diagnoses');
 

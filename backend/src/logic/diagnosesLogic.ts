@@ -92,10 +92,10 @@ const getUsersDiagnosesHistory = async (
   if (!user) throw new ServerError('User not found and should be set');
 
   const history = await getDiagnosesRequestsByCondition({ userId: user.id });
-  return history ?? [];
+  return history;
 };
 
-const getDiagnosisRequest = async (
+const getDiagnosesRequest = async (
   id: number,
   user: UserModel,
 ): Promise<DiagnosesRequestModel | undefined> => {
@@ -127,7 +127,7 @@ const editDiagnosis = async (
 
 export {
   editDiagnosis,
-  getDiagnosisRequest,
+  getDiagnosesRequest,
   getPossibleDiagnoses,
   getUsersDiagnosesHistory,
 };
