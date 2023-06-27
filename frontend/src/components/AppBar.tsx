@@ -28,7 +28,7 @@ const AppBar = () => {
     border border-white border-opacity-10 rounded-lg"
     >
       <Logo />
-      <div className="flex flex-row gap-10 w-1/4">
+      <div className="flex flex-row gap-10 w-1/2 lg:w-1/3">
         {routes.map((route) => (
           <AppBarButton
             key={route.path}
