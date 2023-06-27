@@ -1,5 +1,5 @@
 type GetDiagnosesReqBody = {
-  symptomsIds: string[];
+  symptomsIds: number[];
   gender: string;
   birthyear: string;
 };

@@ -8,7 +8,7 @@ describe('validateGetPossibleDiagnosesReqBody', () => {
     const params: GetDiagnosesReqBody = {
       birthyear: '2000',
       gender: 'male',
-      symptomsIds: ['1', '2'],
+      symptomsIds: [1, 2],
     };
 
     const result = validateGetPossibleDiagnosesReqBody(params);
@@ -24,21 +24,23 @@ describe('validateGetPossibleDiagnosesReqBody', () => {
 
     expect(() => {
       validateGetPossibleDiagnosesReqBody(params as GetDiagnosesReqBody);
-    }).toThrow(new BadRequestError('queryParam: symptomsIds is required'));
+    }).toThrow(new BadRequestError('payload error: symptomsIds is required'));
   });
 
   it('should return BadRequestError on invalid symptomsIds type', () => {
     const params = {
       birthyear: '2000',
       gender: 'male',
-      symptomsIds: '1',
+      symptomsIds: 1,
     };
 
     expect(() => {
       validateGetPossibleDiagnosesReqBody(
         params as unknown as GetDiagnosesReqBody,
       );
-    }).toThrow(new BadRequestError('queryParam: symptomsIds must be an array'));
+    }).toThrow(
+      new BadRequestError('payload error: symptomsIds must be an array'),
+    );
   });
 
   it('should return BadRequestError on empty symptomsIds', () => {
@@ -53,15 +55,16 @@ describe('validateGetPossibleDiagnosesReqBody', () => {
         params as unknown as GetDiagnosesReqBody,
       );
     }).toThrow(
-      new BadRequestError('queryParam: symptomsIds must not be empty'),
+      new BadRequestError('payload error: symptomsIds must not be empty'),
     );
   });
+
 
   it('should return BadRequestError on invalid symptomsIds', () => {
     const params = {
       birthyear: '2000',
       gender: 'male',
-      symptomsIds: ['a'],
+      symptomsIds: [-1],
     };
 
     expect(() => {
@@ -70,25 +73,7 @@ describe('validateGetPossibleDiagnosesReqBody', () => {
       );
     }).toThrow(
       new BadRequestError(
-        'queryParam: symptomsIds must be an array of positive numbers',
-      ),
-    );
-  });
-
-  it('should return BadRequestError on invalid symptomsIds', () => {
-    const params = {
-      birthyear: '2000',
-      gender: 'male',
-      symptomsIds: ['-1'],
-    };
-
-    expect(() => {
-      validateGetPossibleDiagnosesReqBody(
-        params as unknown as GetDiagnosesReqBody,
-      );
-    }).toThrow(
-      new BadRequestError(
-        'queryParam: symptomsIds must be an array of positive numbers',
+        'payload error: symptomsIds must be an array of positive numbers',
       ),
     );
   });
@@ -97,7 +82,7 @@ describe('validateGetPossibleDiagnosesReqBody', () => {
     const params = {
       birthyear: '2000',
       gender: 'a',
-      symptomsIds: ['1'],
+      symptomsIds: [1],
     };
 
     expect(() => {
@@ -106,7 +91,7 @@ describe('validateGetPossibleDiagnosesReqBody', () => {
       );
     }).toThrow(
       new BadRequestError(
-        `queryParam: Gender - a is invalid. Needs to be one of: ${Object.values(
+        `payload error: Gender - a is invalid. Needs to be one of: ${Object.values(
           Genders,
         )
           .filter((g) => typeof g === 'string')
@@ -120,7 +105,7 @@ describe('validateGetPossibleDiagnosesReqBody', () => {
     const params = {
       birthyear: '190',
       gender: 'male',
-      symptomsIds: ['1'],
+      symptomsIds: [1],
     };
 
     expect(() => {
@@ -128,7 +113,7 @@ describe('validateGetPossibleDiagnosesReqBody', () => {
         params as unknown as GetDiagnosesReqBody,
       );
     }).toThrow(
-      new BadRequestError('queryParam: birthyear must be a valid year'),
+      new BadRequestError('payload error: birthyear must be a valid year'),
     );
   });
 
@@ -136,7 +121,7 @@ describe('validateGetPossibleDiagnosesReqBody', () => {
     const params = {
       birthyear: 'a',
       gender: 'male',
-      symptomsIds: ['1'],
+      symptomsIds: [1],
     };
 
     expect(() => {
@@ -144,7 +129,7 @@ describe('validateGetPossibleDiagnosesReqBody', () => {
         params as unknown as GetDiagnosesReqBody,
       );
     }).toThrow(
-      new BadRequestError('queryParam: birthyear must be a valid year'),
+      new BadRequestError('payload error: birthyear must be a valid year'),
     );
   });
 });

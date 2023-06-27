@@ -37,7 +37,7 @@ describe('getPossibleDiagnoses', () => {
   const params = {
     birthyear: '1990',
     gender: 'male',
-    symptomsIds: ['1', '2'],
+    symptomsIds: [1, 2],
   };
 
   const user = {
