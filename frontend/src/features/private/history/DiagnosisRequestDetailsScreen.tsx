@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
 import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -94,7 +95,7 @@ const DiagnosisRequestDetailsScreen = () => {
     }, 500);
   };
 
-  const isConfirmed = request?.possibleDiagnoses.some((d) => d.confirmed);
+  const isConfirmed = request?.possibleDiagnoses?.some((d) => d.confirmed);
 
   const confirmModalBody = (
     <div className="flex flex-col gap-10 w-full h-full">
@@ -169,38 +170,45 @@ const DiagnosisRequestDetailsScreen = () => {
               }}
             />
             <section className="flex flex-row justify-between">
-              <span className="text-xl font-bold">Possible Diagnoses:</span>
-              <span className="text-xl font-bold">Tell us, which diagnosis was correct?</span>
+              <span className="text-xl font-bold">
+                {request.possibleDiagnoses.length ? 'Possible Diagnoses:' : 'No diagnosis'}
+              </span>
+              {isConfirmed || !request.possibleDiagnoses.length ? (
+                <div />
+              ) : (
+                <span className="text-xl font-bold">Tell us, which diagnosis was correct?</span>
+              )}
             </section>
             {request.possibleDiagnoses
-            .sort((a, b) => b.accuracy - a.accuracy)
-            .map((diagnosis) => (
-              <div className="my-1 flex flex-col w-full" key={diagnosis.id}>
-                <p className="mb-2 text-lg font-semibold">{diagnosis.name}</p>
-                <div className="flex flex-row items-center justify-between gap-20">
-                  <ProgressBar progress={diagnosis.accuracy} />
-                  {isConfirmed ? (
-                    diagnosis.confirmed && (
-                      <span className="text-xl text-green-200 font-semibold">Confirmed</span>
-                    )
-                  ) : (
-                    <PrimaryButton
-                      style={{
-                        padding: '0.5rem 1rem',
-                      }}
-                      onClick={() => {
-                        setShowConfirmModal(true);
-                        setConfirmDiagnosisId(diagnosis.id);
-                      }}
-                      disabled={confirmingDiagnosis}
-                      loading={confirmingDiagnosis && confirmDiagnosisId === diagnosis.id}
-                    >
-                      Confirm
-                    </PrimaryButton>
-                  )}
+              .sort((a, b) => b.accuracy - a.accuracy)
+              .sort((a) => (a.confirmed ? -1 : 1))
+              .map((diagnosis) => (
+                <div className="my-1 flex flex-col w-full" key={diagnosis.id}>
+                  <p className="mb-2 text-lg font-semibold">{diagnosis.name}</p>
+                  <div className="flex flex-row items-center justify-between gap-20">
+                    <ProgressBar progress={diagnosis.accuracy} />
+                    {isConfirmed ? (
+                      diagnosis.confirmed && (
+                        <span className="text-xl text-green-200 font-semibold">Confirmed</span>
+                      )
+                    ) : (
+                      <PrimaryButton
+                        style={{
+                          padding: '0.5rem 1rem',
+                        }}
+                        onClick={() => {
+                          setShowConfirmModal(true);
+                          setConfirmDiagnosisId(diagnosis.id);
+                        }}
+                        disabled={confirmingDiagnosis}
+                        loading={confirmingDiagnosis && confirmDiagnosisId === diagnosis.id}
+                      >
+                        Confirm
+                      </PrimaryButton>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
         )}
       </div>

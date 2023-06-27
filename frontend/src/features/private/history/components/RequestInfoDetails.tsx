@@ -26,20 +26,20 @@ const RequestInfoDetails = ({ request, symptoms }: RequestInfoDetailsProps) => (
     <div className="flex flex-row justify-between gap-10 items-center">
       <span className="text-lg">Symptoms:</span>
       <span className="text-md">
-        {request.symptomsIds
-          .split(',')
-          .map((id) => symptoms.find((s) => s.ID === parseInt(id, 10))?.Name)}
+        {request?.symptomsIds
+          ?.split(',')
+          ?.map((id) => symptoms.find((s) => s.ID === parseInt(id, 10))?.Name)}
       </span>
     </div>
     <div
       className={classNames(
-        request.possibleDiagnoses.some((d) => d.confirmed) ? 'text-green-200' : 'text-red-200',
+        request?.possibleDiagnoses?.some((d) => d.confirmed) ? 'text-green-200' : 'text-red-200',
         `flex flex-row justify-between gap-10 items-center`
       )}
     >
       <span className="text-lg">Confirmed:</span>
       <span className="text-md">
-        {request.possibleDiagnoses.some((d) => d.confirmed) ? 'Yes' : 'No'}
+        {request?.possibleDiagnoses?.some((d) => d.confirmed) ? 'Yes' : 'No'}
       </span>
     </div>
   </section>

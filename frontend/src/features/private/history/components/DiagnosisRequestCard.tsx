@@ -13,7 +13,7 @@ type DiagnosisRequestCardProps = {
 const DiagnosisRequestCard = ({ request, symptoms }: DiagnosisRequestCardProps) => {
   const navigate = useNavigate();
 
-  const isConfirmed = request.possibleDiagnoses.some((d) => d.confirmed);
+  const isConfirmed = request?.possibleDiagnoses?.some((d) => d.confirmed);
 
   return (
     <div className="flex flex-col bg-backgroundDark border border-white border-opacity-10 rounded-lg p-4">
@@ -38,26 +38,41 @@ const DiagnosisRequestCard = ({ request, symptoms }: DiagnosisRequestCardProps) 
           margin: '1rem 0',
         }}
       />
-      <span className="text-xl font-semibold">Possible Diagnoses:</span>
-      {request.possibleDiagnoses
-        .sort((a, b) => b.accuracy - a.accuracy)
-        .map((diagnosis) => (
-          <div className="my-1" key={diagnosis.id}>
-            <p
-              className={classNames(
-                isConfirmed
-                  ? diagnosis.confirmed
-                    ? 'text-green-200 font-semibold'
-                    : 'text-gray-400'
-                  : '',
-                'text-md'
-              )}
-            >
-              {diagnosis.name}
-            </p>
-            <ProgressBar progress={diagnosis.accuracy} size="small" />
-          </div>
-        ))}
+      <span className="text-xl font-semibold">
+        {request.possibleDiagnoses.length ? 'Possible Diagnoses:' : 'No diagnosis'}
+      </span>
+      <section
+        className="h-full overflow-y-auto py-2"
+        style={{
+          maxHeight: '40rem',
+        }}
+      >
+        {request?.possibleDiagnoses
+          ?.sort((a, b) => b.accuracy - a.accuracy)
+          ?.sort((a) => (a.confirmed ? -1 : 1))
+          ?.map((diagnosis) => (
+            <div className="my-1" key={diagnosis.id}>
+              <div className="flex flex-row justify-between items-center">
+                <p
+                  className={classNames(
+                    isConfirmed
+                      ? diagnosis.confirmed
+                        ? 'text-green-200 font-semibold'
+                        : 'text-gray-400'
+                      : '',
+                    'text-md'
+                  )}
+                >
+                  {diagnosis.name}
+                </p>
+                {diagnosis.confirmed && (
+                  <span className="text-green-200 font-semibold">Confirmed</span>
+                )}
+              </div>
+              <ProgressBar progress={diagnosis.accuracy} size="small" />
+            </div>
+          ))}
+      </section>
     </div>
   );
 };
