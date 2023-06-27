@@ -152,7 +152,7 @@ describe('getDiagnosesRequestsByCondition', () => {
       where: condition,
       include: [
         {
-          all: true,
+          association: 'possibleDiagnoses',
         },
       ],
     });
@@ -172,7 +172,7 @@ describe('getDiagnosesRequestsByCondition', () => {
       where: condition,
       include: [
         {
-          all: true,
+          association: 'possibleDiagnoses',
         },
       ],
     });

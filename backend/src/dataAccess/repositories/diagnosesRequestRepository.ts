@@ -19,7 +19,7 @@ const getDiagnosesRequestsByCondition = async <
   where: T,
   include: Includeable | Includeable[] | undefined = [
     {
-      all: true,
+      association: 'possibleDiagnoses',
     },
   ],
 ): Promise<DiagnosesRequestModel[]> =>
