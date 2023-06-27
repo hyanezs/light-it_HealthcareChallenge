@@ -130,6 +130,7 @@ const RequestDiagnosesForm = ({ setDiagnoses }: RequestDiagnosesFormProps) => {
           id="personal"
           checked={isRequestingForExternal}
           onChange={handlePersonRequestingChange}
+          className="hover:cursor-pointer"
         />
       </section>
       {isRequestingForExternal && (

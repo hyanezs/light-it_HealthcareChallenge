@@ -12,6 +12,7 @@ The application provides the following features:
 - User registration and login
 - Symptoms evaluation
 - Diagnoses history
+- Diagnosis Confirmation
 
 ## Technologies
 
@@ -29,11 +30,11 @@ The backend is developed in NodeJS (Express) using TypeScript. It connects to a 
 
 The easiest way to get started is to install Docker. You can find the installation instructions for your operating system [here](https://docs.docker.com/get-docker/).
 
-After installing Docker, you can run continue with the following steps.
+After installing Docker, you can continue with the following steps.
 
 ### Clone the repository
 
-Clone the repository using the following command:
+Clone the repository using the following command (if not already done):
 
 ```bash
 git clone https://github.com/hyanezs/light-it_HealthcareChallenge.git
@@ -43,7 +44,15 @@ This will create a folder called `light-it_HealthcareChallenge` with the source 
 
 ### Create and run the application
 
-To create and run the application, you can use the following command:
+To create and run the application, you can use the following commands, inside the root folder:
+
+#### Build
+
+```sh
+docker compose build
+```
+
+#### Run
 
 ```bash
 docker-compose up -d

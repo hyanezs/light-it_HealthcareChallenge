@@ -11,6 +11,12 @@
 
 - docker >=4.20.0
 
+#### Build
+
+```sh
+docker compose build
+```
+
 #### Run
 
 ```sh
@@ -22,6 +28,7 @@ docker compose up
 #### Prerequisites
 
 Either dockerized or locally
+
 - postgreSQL >= 15.0
 - redis >= 7.0
 
@@ -40,19 +47,6 @@ yarn start
 ```
 
 Starts api development server at http://localhost:5000/
-
-## Docker
-
-### Prerequisites
-
-- docker >=4.20.0
-
-### Run
-
-```sh
-docker compose up
-```
-
 
 ## Author
 

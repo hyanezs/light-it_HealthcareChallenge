@@ -33,6 +33,24 @@ Builds the application for production and outputs minified files to `build` fold
 yarn build
 ```
 
+## Docker
+
+### Prerequisites
+
+- docker >=4.20.0
+
+### Build
+
+```sh
+docker compose build
+```
+
+### Run
+
+```sh
+docker compose up
+```
+
 ## Author
 
 👤 **hyanezs**
