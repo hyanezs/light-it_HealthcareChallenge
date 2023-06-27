@@ -3,10 +3,23 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Logo } from '../assets/images';
-import { SecondaryButton } from './Buttons';
+import { AppBarButton } from './Buttons';
 
 const AppBar = () => {
   const navigate = useNavigate();
+  const location = window.location.pathname;
+  console.log({ location });
+
+  const routes = [
+    {
+      path: '/request-diagnosis',
+      name: 'Request Diagnosis',
+    },
+    {
+      path: '/history',
+      name: 'History',
+    },
+  ];
 
   return (
     <nav
@@ -15,21 +28,20 @@ const AppBar = () => {
     border border-white border-opacity-10 rounded-lg"
     >
       <Logo />
-      <div className="flex flex-row gap-10">
-        <SecondaryButton
-          onClick={() => {
-            navigate('/diagnoses');
-          }}
-        >
-          Diagnoses
-        </SecondaryButton>
-        <SecondaryButton
-          onClick={() => {
-            navigate('/history');
-          }}
-        >
-          History
-        </SecondaryButton>
+      <div className="flex flex-row gap-10 w-1/4">
+        {routes.map((route) => (
+          <AppBarButton
+            key={route.path}
+            onClick={() => {
+              navigate(route.path);
+            }}
+            disabled={location === route.path}
+            location={location}
+            path={route.path}
+          >
+            {route.name}
+          </AppBarButton>
+        ))}
       </div>
       <div>
         <button
