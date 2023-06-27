@@ -41,7 +41,11 @@ const getDiagnosesRequestByCondition = async <
 
 const getDiagnosesRequestById = async (
   id: number,
-  include: string[] = [],
+  include: Includeable | Includeable[] | undefined = [
+    {
+      all: true,
+    },
+  ],
 ): Promise<DiagnosesRequestModel | null> =>
   DiagnosesRequest.findByPk(id, {
     include,
