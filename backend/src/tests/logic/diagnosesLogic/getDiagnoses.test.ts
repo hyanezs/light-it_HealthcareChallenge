@@ -10,7 +10,7 @@ import {
 import transformDiagnosisResponse from '../../../external/apiMedic/utils';
 import { getPossibleDiagnoses } from '../../../logic/diagnosesLogic';
 import { UserModel } from '../../../types/models';
-import { validateGetPossibleDiagnosesParams } from '../../../validations';
+import { validateGetPossibleDiagnosesReqBody } from '../../../validations';
 
 jest.mock('../../../external/apiMedic/authenticate');
 jest.mock('../../../validations');
@@ -20,8 +20,8 @@ jest.mock('../../../external/apiMedic/utils');
 
 describe('getPossibleDiagnoses', () => {
   const mockedAuthenticateApiMedic = authenticateApiMedic as jest.Mock;
-  const mockedValidateGetPossibleDiagnosesParams =
-    validateGetPossibleDiagnosesParams as jest.Mock;
+  const mockedValidateGetPossibleDiagnosesReqBody =
+    validateGetPossibleDiagnosesReqBody as jest.Mock;
   const mockedClearCachePreffix = clearCachePreffix as jest.Mock;
   const mockedPersistDiagnosesRequest = persistDiagnosesRequest as jest.Mock;
   const mockedTransformDiagnosisResponse =
@@ -37,7 +37,7 @@ describe('getPossibleDiagnoses', () => {
   const params = {
     birthyear: '1990',
     gender: 'male',
-    symptomsIds: ['1', '2'],
+    symptomsIds: [1, 2],
   };
 
   const user = {
@@ -47,7 +47,7 @@ describe('getPossibleDiagnoses', () => {
   it('should return diagnoses from API if call is successful', async () => {
     const apiResponse = ['diagnosi1', 'diagnosi2'];
     mockedApiMedic.onGet(endpoints.diagnosis).replyOnce(200, apiResponse);
-    mockedValidateGetPossibleDiagnosesParams.mockImplementation(() => {});
+    mockedValidateGetPossibleDiagnosesReqBody.mockImplementation(() => {});
     mockedPersistDiagnosesRequest.mockImplementation(() => {});
     mockedTransformDiagnosisResponse.mockImplementation(() => {});
 
@@ -60,7 +60,7 @@ describe('getPossibleDiagnoses', () => {
       gender: 'male',
       symptoms: '[1,2]',
     });
-    expect(mockedValidateGetPossibleDiagnosesParams).toHaveBeenCalledTimes(1);
+    expect(mockedValidateGetPossibleDiagnosesReqBody).toHaveBeenCalledTimes(1);
     expect(mockedPersistDiagnosesRequest).toHaveBeenCalledTimes(1);
     expect(result).toEqual(['diagnosi1', 'diagnosi2']);
     expect(mockedClearCachePreffix).toHaveBeenCalledTimes(0);
@@ -68,7 +68,7 @@ describe('getPossibleDiagnoses', () => {
   });
 
   it('should throw error if validation fails', async () => {
-    mockedValidateGetPossibleDiagnosesParams.mockImplementation(() => {
+    mockedValidateGetPossibleDiagnosesReqBody.mockImplementation(() => {
       throw new BadRequestError('Some validation error');
     });
     mockedPersistDiagnosesRequest.mockImplementation(() => {});
@@ -79,7 +79,7 @@ describe('getPossibleDiagnoses', () => {
     expect(mockedApiMedic.history.get.length).toBe(0);
     expect(authenticateApiMedic).toHaveBeenCalledTimes(0);
     expect(mockedClearCachePreffix).toHaveBeenCalledTimes(0);
-    expect(mockedValidateGetPossibleDiagnosesParams).toHaveBeenCalledTimes(1);
+    expect(mockedValidateGetPossibleDiagnosesReqBody).toHaveBeenCalledTimes(1);
     expect(mockedPersistDiagnosesRequest).toHaveBeenCalledTimes(0);
   });
 
@@ -94,7 +94,7 @@ describe('getPossibleDiagnoses', () => {
       .onGet(endpoints.diagnosis)
       .replyOnce(200, apiResponse);
 
-    mockedValidateGetPossibleDiagnosesParams.mockImplementation(() => {});
+    mockedValidateGetPossibleDiagnosesReqBody.mockImplementation(() => {});
     mockedAuthenticateApiMedic.mockImplementation(() => {});
     mockedClearCachePreffix.mockImplementation(() => {});
     mockedPersistDiagnosesRequest.mockImplementation(() => {});
@@ -115,7 +115,7 @@ describe('getPossibleDiagnoses', () => {
       symptoms: '[1,2]',
     });
     expect(mockedPersistDiagnosesRequest).toHaveBeenCalledTimes(1);
-    expect(mockedValidateGetPossibleDiagnosesParams).toHaveBeenCalledTimes(2);
+    expect(mockedValidateGetPossibleDiagnosesReqBody).toHaveBeenCalledTimes(2);
     expect(authenticateApiMedic).toHaveBeenCalledTimes(1);
     expect(clearCachePreffix).toHaveBeenCalledTimes(1);
     expect(result).toEqual(['diagnosi1', 'diagnosi2']);
@@ -125,7 +125,7 @@ describe('getPossibleDiagnoses', () => {
     mockedApiMedic
       .onGet(endpoints.diagnosis)
       .replyOnce(500, 'Some error message');
-    mockedValidateGetPossibleDiagnosesParams.mockResolvedValue(undefined);
+    mockedValidateGetPossibleDiagnosesReqBody.mockResolvedValue(undefined);
 
     await expect(
       getPossibleDiagnoses(params, user as UserModel),

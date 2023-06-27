@@ -11,14 +11,19 @@ type ButtonProps = {
   loading?: boolean;
   type?: 'button' | 'submit' | 'reset';
   style?: React.CSSProperties;
+  disabled?: boolean;
 };
 
-const PrimaryButton = ({ children, onClick, loading, type }: ButtonProps) => (
+const PrimaryButton = ({ children, disabled, onClick, loading, type, style }: ButtonProps) => (
   <button
-    className={classNames(`bg-cyan-500 hover:bg-cyan-400  font-semibold 
-    justify-center items-center flex flex-row h-18 my-2 rounded-xl p-5`)}
+    className={classNames(
+      disabled ? 'cursor-default opacity-30' : 'bg-cyan-500 hover:bg-cyan-400',
+      `font-semibold 
+    justify-center items-center flex flex-row h-18 my-2 rounded-xl p-5`
+    )}
     onClick={onClick}
     type={type ?? 'button'}
+    style={style}
   >
     {loading && (
       <Spinner
@@ -34,12 +39,43 @@ const PrimaryButton = ({ children, onClick, loading, type }: ButtonProps) => (
   </button>
 );
 
-const SecondaryButton = ({ children, onClick, style }: ButtonProps) => (
+const SecondaryButton = ({ children, onClick, style, disabled }: ButtonProps) => (
   <button
     type="button"
-    className={`text-cyan-300 hover:text-cyan-200 font-semibold 
-    h-10 my-2 rounded-md mx-auto w-1/2`}
-    onClick={onClick}
+    className={classNames(
+      disabled ? 'text-gray-500 cursor-default' : 'text-cyan-300 hover:text-cyan-200',
+      `font-semibold 
+    h-10 my-2 rounded-md`
+    )}
+    onClick={disabled ? () => undefined : onClick}
+    style={style}
+  >
+    {children}
+  </button>
+);
+
+type AppBarButtonProps = ButtonProps & {
+  location?: string;
+  path?: string;
+};
+
+const AppBarButton = ({
+  children,
+  onClick,
+  style,
+  disabled,
+  path,
+  location,
+}: AppBarButtonProps) => (
+  <button
+    type="button"
+    className={classNames(
+      disabled ? 'cursor-default' : '',
+      location === path ? 'text-opacity-100' : 'text-opacity-50 hover:text-cyan-100',
+      `font-semibold text-cyan-300  
+    h-10 my-2 rounded-md mx-auto w-1/2`
+    )}
+    onClick={disabled ? () => undefined : onClick}
     style={style}
   >
     {children}
@@ -52,4 +88,4 @@ const InfoButton = ({ onClick }: ButtonProps) => (
   </button>
 );
 
-export { InfoButton, PrimaryButton, SecondaryButton };
+export { AppBarButton, InfoButton, PrimaryButton, SecondaryButton };

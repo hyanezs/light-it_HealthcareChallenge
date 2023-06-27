@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import { PrimaryButton, VirtualizedMultiSelect } from '../../../../components';
 import { type Diagnosis, type Option, type Symptom } from '../../../../types';
 import { Genders } from '../../../../types/constants';
-import { getDiagnoses, type GetDiagnosesParams } from '../api/get-diagnoses';
+import { getDiagnoses, type GetDiagnosesReqBody } from '../api/get-diagnoses';
 import getSymptoms from '../api/get-symptoms';
 
 type RequestDiagnosesFormProps = {
@@ -44,7 +44,7 @@ const RequestDiagnosesForm = ({ setDiagnoses }: RequestDiagnosesFormProps) => {
       nonPersonalInfo,
     });
 
-    let params: GetDiagnosesParams = {
+    let reqBody: GetDiagnosesReqBody = {
       symptomsIds: selectedSymptoms.map((symptom) => symptom.value) as number[],
     };
 
@@ -64,15 +64,15 @@ const RequestDiagnosesForm = ({ setDiagnoses }: RequestDiagnosesFormProps) => {
         return;
       }
 
-      params = {
-        ...params,
+      reqBody = {
+        ...reqBody,
         ...nonPersonalInfo,
       };
     }
 
     setRequestingDiagnoses(true);
 
-    const response = await getDiagnoses(params);
+    const response = await getDiagnoses(reqBody);
     if (response) {
       setDiagnoses(response.data);
       toast.success('Diagnosis requested successfully');
@@ -130,6 +130,7 @@ const RequestDiagnosesForm = ({ setDiagnoses }: RequestDiagnosesFormProps) => {
           id="personal"
           checked={isRequestingForExternal}
           onChange={handlePersonRequestingChange}
+          className="hover:cursor-pointer"
         />
       </section>
       {isRequestingForExternal && (

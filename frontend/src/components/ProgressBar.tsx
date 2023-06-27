@@ -4,6 +4,7 @@ import { classNames } from '../utils';
 
 type ProgressBarProps = {
   progress: number;
+  size?: 'small' | 'large';
 };
 
 const getColor = (progress: number, weight: keyof typeof colors.amber) => {
@@ -13,27 +14,27 @@ const getColor = (progress: number, weight: keyof typeof colors.amber) => {
   return colors.green[weight];
 };
 
-const ProgressBar = ({ progress }: ProgressBarProps) => (
+const ProgressBar = ({ progress, size = 'large' }: ProgressBarProps) => (
   <div className="w-full relative">
     <div
-      className={'rounded-full border p-1'}
+      className={classNames(size === 'large' ? 'p-1' : '', 'rounded-full border')}
       style={{
         borderColor: getColor(progress, '400'),
       }}
     >
       <div
-        className={classNames(
-          `flex h-6 items-center justify-center rounded-full 
-        text-xs leading-none`
-        )}
+        className={classNames(size === 'large' ? 'h-6' : 'h-4', `rounded-full leading-none`)}
         style={{
           width: `${progress}%`,
           backgroundColor: getColor(progress, '200'),
         }}
       />
       <span
-        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2
-        p-1 text-black font-extrabold text-lg"
+        className={classNames(
+          size === 'large' ? 'text-lg font-extrabold' : 'text-sm font-bold',
+          `absolute top-1/2 left-1/2 transform 
+          -translate-x-1/2 -translate-y-1/2 p-1 text-black`
+        )}
         style={{
           color: progress < 46 ? 'white' : 'black',
         }}

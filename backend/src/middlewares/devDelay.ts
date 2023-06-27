@@ -2,7 +2,7 @@ import { type NextFunction, type Request, type Response } from 'express';
 import { logger } from '../utils';
 
 export default async (req: Request, _res: Response, next: NextFunction) => {
-  if (req.url === '/me') {
+  if (req.url === '/me' || !process.env.ADD_DELAY) {
     next();
     return;
   }

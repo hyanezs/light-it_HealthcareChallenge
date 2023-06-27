@@ -2,21 +2,28 @@
 import axios, { type AxiosError } from 'axios';
 import dayjs from 'dayjs';
 import { cacheKeys, clearCachePreffix } from '../dataAccess/cache';
+import { updateDiagnosis } from '../dataAccess/repositories';
 import {
+  getDiagnosesRequestById,
   getDiagnosesRequestsByCondition,
   persistDiagnosesRequest,
 } from '../dataAccess/repositories/diagnosesRequestRepository';
-import { ServerError } from '../exceptions';
+import { NotFoundError, ServerError } from '../exceptions';
 import { authenticateApiMedic } from '../external/apiMedic/authenticate';
 import { endpoints, healthApiMedic } from '../external/apiMedic/instances';
 import transformDiagnosisResponse from '../external/apiMedic/utils';
 import {
   type Diagnosis,
-  type GetDiagnosesParams,
+  type GetDiagnosesReqBody,
 } from '../types/external/external-diagnosis';
-import { type DiagnosesRequestModel, type UserModel } from '../types/models';
+import {
+  type DiagnosesRequestModel,
+  type DiagnosisModel,
+  type UserModel,
+} from '../types/models';
+import { type UpdateDiagnosisReqBody } from '../types/requests';
 import { getGenderFromString, logger } from '../utils';
-import { validateGetPossibleDiagnosesParams } from '../validations';
+import { validateGetPossibleDiagnosesReqBody } from '../validations';
 
 type GetDiagnosesApiMedicParams = {
   symptoms: string;
@@ -25,10 +32,10 @@ type GetDiagnosesApiMedicParams = {
 };
 
 const getPossibleDiagnoses = async (
-  queryParams: GetDiagnosesParams,
+  queryParams: GetDiagnosesReqBody,
   user: UserModel,
 ): Promise<Diagnosis[] | undefined> => {
-  validateGetPossibleDiagnosesParams(queryParams);
+  validateGetPossibleDiagnosesReqBody(queryParams);
 
   try {
     const params: GetDiagnosesApiMedicParams = {
@@ -85,7 +92,42 @@ const getUsersDiagnosesHistory = async (
   if (!user) throw new ServerError('User not found and should be set');
 
   const history = await getDiagnosesRequestsByCondition({ userId: user.id });
-  return history ?? [];
+  return history;
 };
 
-export { getPossibleDiagnoses, getUsersDiagnosesHistory };
+const getDiagnosesRequest = async (
+  id: number,
+  user: UserModel,
+): Promise<DiagnosesRequestModel | undefined> => {
+  if (!user) throw new ServerError('User not found and should be set');
+
+  const diagnosisRequest = await getDiagnosesRequestById(id);
+  if (!diagnosisRequest || diagnosisRequest.userId !== user.id)
+    throw new NotFoundError('Diagnosis request not found');
+
+  return diagnosisRequest;
+};
+
+const editDiagnosis = async (
+  id: number,
+  user: UserModel,
+  data: UpdateDiagnosisReqBody,
+): Promise<void> => {
+  if (!user) throw new ServerError('User not found and should be set');
+
+  const diagnosisRequest = await getDiagnosesRequestById(id, [
+    'possibleDiagnoses',
+  ]);
+  if (!diagnosisRequest || diagnosisRequest.userId !== user.id)
+    throw new NotFoundError('Diagnosis request not found');
+
+  const updatedDiagnosis = await updateDiagnosis(id, data as DiagnosisModel);
+  if (!updatedDiagnosis) throw new NotFoundError('Diagnosis request not found');
+};
+
+export {
+  editDiagnosis,
+  getDiagnosesRequest,
+  getPossibleDiagnoses,
+  getUsersDiagnosesHistory,
+};

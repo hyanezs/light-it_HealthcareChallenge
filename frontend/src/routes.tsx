@@ -8,6 +8,9 @@ const DiagnosesScreen = React.lazy(
   async () => import('./features/private/diagnoses/DiagnosesScreen')
 );
 const HistoryScreen = React.lazy(async () => import('./features/private/history/HistoryScreen'));
+const DiagnosisRequestDetailsScreen = React.lazy(
+  async () => import('./features/private/history/DiagnosisRequestDetailsScreen')
+);
 
 // Public
 const AuthenticateScreen = React.lazy(
@@ -31,13 +34,18 @@ const routes: Route[] = [
     element: lazyRender(<LogoutScreen />),
   },
   {
-    path: '/diagnoses',
+    path: '/request-diagnosis',
     element: lazyRender(<DiagnosesScreen />),
     private: true,
   },
   {
     path: '/history',
     element: lazyRender(<HistoryScreen />),
+    private: true,
+  },
+  {
+    path: '/diagnoses/:id',
+    element: lazyRender(<DiagnosisRequestDetailsScreen />),
     private: true,
   },
   {

@@ -19,10 +19,10 @@ const getDiagnosesRequestsByCondition = async <
   where: T,
   include: Includeable | Includeable[] | undefined = [
     {
-      all: true,
+      association: 'possibleDiagnoses',
     },
   ],
-): Promise<DiagnosesRequestModel[] | null> =>
+): Promise<DiagnosesRequestModel[]> =>
   DiagnosesRequest.findAll({
     where,
     include,
@@ -41,7 +41,11 @@ const getDiagnosesRequestByCondition = async <
 
 const getDiagnosesRequestById = async (
   id: number,
-  include: string[] = [],
+  include: Includeable | Includeable[] | undefined = [
+    {
+      all: true,
+    },
+  ],
 ): Promise<DiagnosesRequestModel | null> =>
   DiagnosesRequest.findByPk(id, {
     include,

@@ -84,7 +84,6 @@ describe('POST /auth/register', () => {
       birthdate: '02/12/2000',
       email: 'hyanez@gmail.com',
       password: 'Password123',
-      requestTimestamp: expect.any(Number),
     });
     expect(mockedRegister).toHaveBeenCalledTimes(1);
   });

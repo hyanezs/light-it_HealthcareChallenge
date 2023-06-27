@@ -103,7 +103,7 @@ const RegisterForm = () => {
     setRegistering(false);
     if (response) {
       toast.success(response.success);
-      navigate('/diagnoses');
+      navigate('/request-diagnosis');
     }
   };
 

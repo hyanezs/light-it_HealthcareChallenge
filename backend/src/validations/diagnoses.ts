@@ -1,26 +1,24 @@
 import dayjs from 'dayjs';
 import { BadRequestError } from '../exceptions';
 import { Genders } from '../types';
-import { type GetDiagnosesParams } from '../types/requests';
+import { type GetDiagnosesReqBody } from '../types/requests';
 
-const validateGetPossibleDiagnosesParams = (params: GetDiagnosesParams) => {
+const validateGetPossibleDiagnosesReqBody = (params: GetDiagnosesReqBody) => {
   if (!params.symptomsIds) {
-    throw new BadRequestError('queryParam: symptomsIds is required');
+    throw new BadRequestError('payload error: symptomsIds is required');
   }
 
   if (!Array.isArray(params.symptomsIds)) {
-    throw new BadRequestError('queryParam: symptomsIds must be an array');
+    throw new BadRequestError('payload error: symptomsIds must be an array');
   }
 
   if (params.symptomsIds.length === 0) {
-    throw new BadRequestError('queryParam: symptomsIds must not be empty');
+    throw new BadRequestError('payload error: symptomsIds must not be empty');
   }
 
-  const sypmtomsIdsNumbers = params.symptomsIds.map((id) => parseInt(id, 10));
-
-  if (sypmtomsIdsNumbers.some((id) => Number.isNaN(id) || id < 1)) {
+  if (params.symptomsIds.some((id) => Number.isNaN(id) || id < 1)) {
     throw new BadRequestError(
-      'queryParam: symptomsIds must be an array of positive numbers',
+      'payload error: symptomsIds must be an array of positive numbers',
     );
   }
 
@@ -30,7 +28,7 @@ const validateGetPossibleDiagnosesParams = (params: GetDiagnosesParams) => {
     )
   ) {
     throw new BadRequestError(
-      `queryParam: Gender - ${
+      `payload error: Gender - ${
         params.gender
       } is invalid. Needs to be one of: ${Object.values(Genders)
         .filter((g) => typeof g === 'string')
@@ -43,8 +41,8 @@ const validateGetPossibleDiagnosesParams = (params: GetDiagnosesParams) => {
 
   // Ballpark check for valid year (not too far in the past)
   if (Number.isNaN(year) || year < dayjs().year() - 120) {
-    throw new BadRequestError('queryParam: birthyear must be a valid year');
+    throw new BadRequestError('payload error: birthyear must be a valid year');
   }
 };
 
-export { validateGetPossibleDiagnosesParams };
+export { validateGetPossibleDiagnosesReqBody };
