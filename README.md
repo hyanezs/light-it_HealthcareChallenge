@@ -1,4 +1,4 @@
-![Version](https://img.shields.io/badge/version-0.0.0-blue.svg?cacheSeconds=2592000)
+![Version](https://img.shields.io/badge/version-1.0.0-blue.svg?cacheSeconds=2592000)
 ![Prerequisite](https://img.shields.io/badge/docker-%3E%3D4.20.0-blue.svg)
 
 # Light-it's Healthcare Challenge Repository
