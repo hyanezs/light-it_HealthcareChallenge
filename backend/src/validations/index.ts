@@ -1,4 +1,4 @@
-import { validateGetPossibleDiagnosesParams } from './diagnoses';
+import { validateGetPossibleDiagnosesReqBody } from './diagnoses';
 import { validateNewUser } from './user';
 
-export { validateGetPossibleDiagnosesParams, validateNewUser };
+export { validateGetPossibleDiagnosesReqBody, validateNewUser };
