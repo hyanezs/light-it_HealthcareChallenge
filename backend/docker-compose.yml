@@ -15,6 +15,10 @@ services:
       - FRONTEND_HOST=http://localhost:3000
       - JWT_SECRET=healthcare_jwt_key
       - REDIS_URL=redis://healthcare_redis:6379
+      - API_MEDIC_USERNAME=hyanezsa@gmail.com
+      - API_MEDIC_PASSWORD=w7YXj2k3J6RzEa5t9
+      - API_MEDIC_AUTH_URL=https://sandbox-authservice.priaid.ch
+      - API_MEDIC_HEALTH_URL=https://sandbox-healthservice.priaid.ch
       - ENV=development
 
     ports:
