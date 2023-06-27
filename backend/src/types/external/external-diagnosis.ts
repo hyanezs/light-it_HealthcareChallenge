@@ -1,4 +1,4 @@
-type GetDiagnosesParams = {
+type GetDiagnosesReqBody = {
   symptomsIds: string[];
   gender: string;
   birthyear: string;
@@ -24,4 +24,4 @@ type Diagnosis = {
   Specialisation: Specialisation[];
 };
 
-export type { Diagnosis, GetDiagnosesParams };
+export type { Diagnosis, GetDiagnosesReqBody };
